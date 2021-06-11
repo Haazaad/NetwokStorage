@@ -5,23 +5,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ru.haazad</groupId>
-    <artifactId>NetworkStorage</artifactId>
+    <artifactId>CloudStorage</artifactId>
     <version>${project.version}</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>lessons</module>
-        <module>network-client</module>
-        <module>network-server</module>
+        <module>cloud-client</module>
+        <module>cloud-server</module>
     </modules>
 
     <properties>
         <project.version>1.0.0</project.version>
         <log4j.version>2.12.1</log4j.version>
         <netty.version>4.1.65.Final</netty.version>
-    </properties>
-
-    <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>

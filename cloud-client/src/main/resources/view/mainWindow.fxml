@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="view.MainWindow"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="511.0" prefWidth="874.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.controller.MainWindowController">
+   <children>
+      <TextField fx:id="loginField" layoutX="326.0" layoutY="188.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your login" />
+      <Button layoutX="374.0" layoutY="275.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="126.0" text="Login" />
+      <Button layoutX="374.0" layoutY="315.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="126.0" text="Register" />
+      <PasswordField fx:id="passwordField" layoutX="326.0" layoutY="231.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your password" />
+   </children>
 </AnchorPane>

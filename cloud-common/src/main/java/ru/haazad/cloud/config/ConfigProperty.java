@@ -1,15 +1,15 @@
-package ru.haazad.config;
+package ru.haazad.cloud.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ReadProperty {
+public class ConfigProperty {
     private static final String PROPERTY_FILE = "cloud-common/src/main/resources/config.properties";
     private static final Properties properties = new Properties();
 
-    private ReadProperty() {}
+    private ConfigProperty() {}
 
     public static String getProperties(String propertyName) {
         try {
@@ -20,4 +20,5 @@ public class ReadProperty {
             throw new IllegalArgumentException("Unknown property " + propertyName);
         }
     }
+
 }

@@ -1,5 +1,3 @@
-DROP TABLE public."users";
-
 CREATE SEQUENCE users_user_id_seq;
 
 CREATE TABLE IF NOT EXISTS public."users"

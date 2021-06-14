@@ -43,6 +43,7 @@ public class NettyServerService implements ServerService {
                         }
                     });
             ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
+            logger.info("Server is running on port: " + ConfigProperty.getProperties("server.port"));
             future.channel().closeFuture().sync();
         } catch (Exception e) {
             logger.throwing(Level.ERROR, e);

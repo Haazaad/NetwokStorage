@@ -10,17 +10,17 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DatabaseServiceImpl implements DatabaseService {
-    private static final Logger logger = LogManager.getLogger(DatabaseServiceImpl.class);
+public class PostgreDatabaseService implements DatabaseService {
+    private static final Logger logger = LogManager.getLogger(PostgreDatabaseService.class);
 
-    private static DatabaseServiceImpl databaseService;
+    private static PostgreDatabaseService databaseService;
 
     private Connection connection;
 
-    private DatabaseServiceImpl() {}
+    private PostgreDatabaseService() {}
 
-    public static DatabaseServiceImpl initializeDbConnection() {
-        databaseService = new DatabaseServiceImpl();
+    public static PostgreDatabaseService initializeDbConnection() {
+        databaseService = new PostgreDatabaseService();
         return databaseService;
     }
 
@@ -28,7 +28,9 @@ public class DatabaseServiceImpl implements DatabaseService {
     public void connect() {
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection(ConfigProperty.getProperties("db.url"), ConfigProperty.getProperties("db.user"), ConfigProperty.getProperties("db.password"));
+            connection = DriverManager.getConnection(ConfigProperty.getProperties("db.url"),
+                    ConfigProperty.getProperties("db.user"),
+                    ConfigProperty.getProperties("db.password"));
             logger.info("Connect to database");
         } catch (ClassNotFoundException | SQLException e) {
             logger.throwing(Level.ERROR, e);

@@ -17,7 +17,7 @@ public class ClientApp extends Application {
         primaryStage.setResizable(false);
 
         MainWindowController controller = loader.getController();
-        primaryStage.setOnCloseRequest((event) -> controller.shutdown());
+        primaryStage.setOnCloseRequest((event) -> controller.disconnect());
         primaryStage.show();
     }
 }

@@ -74,4 +74,9 @@ public class NettyNetworkService implements NetworkService {
             logger.throwing(Level.ERROR, e);
         }
     }
+
+    @Override
+    public boolean isConnected() {
+        return channel != null && !channel.isShutdown();
+    }
 }

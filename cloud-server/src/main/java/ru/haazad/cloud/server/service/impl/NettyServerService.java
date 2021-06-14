@@ -7,14 +7,13 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.config.ConfigProperty;
 import ru.haazad.cloud.server.service.ServerService;
-import ru.haazad.cloud.server.service.handler.MainHandler;
+import ru.haazad.cloud.server.handler.ExceptionHandler;
+import ru.haazad.cloud.server.handler.MainHandler;
 
 public class NettyServerService implements ServerService {
     private static final Logger logger = LogManager.getLogger(NettyServerService.class);
@@ -39,7 +38,8 @@ public class NettyServerService implements ServerService {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) {
-                            socketChannel.pipeline().addLast(new MainHandler());
+                            socketChannel.pipeline().addLast(new MainHandler(),
+                                    new ExceptionHandler());
                         }
                     });
             ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();

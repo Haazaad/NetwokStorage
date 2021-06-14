@@ -8,4 +8,6 @@ public interface NetworkService {
 
     void closeConnection();
 
+    boolean isConnected();
+
 }

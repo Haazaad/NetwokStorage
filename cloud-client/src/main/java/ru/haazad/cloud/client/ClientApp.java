@@ -14,7 +14,7 @@ public class ClientApp extends Application {
         Parent parent = loader.load();
         primaryStage.setScene(new Scene(parent));
         primaryStage.setTitle("Cloud Client");
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
 
         MainWindowController controller = loader.getController();
         primaryStage.setOnCloseRequest((event) -> controller.disconnect());

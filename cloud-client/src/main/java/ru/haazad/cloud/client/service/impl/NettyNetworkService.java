@@ -7,11 +7,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.service.NetworkService;
 import ru.haazad.cloud.config.ConfigProperty;
 
@@ -41,8 +45,8 @@ public class NettyNetworkService implements NetworkService {
                             @Override
                             protected void initChannel(io.netty.channel.socket.SocketChannel socketChannel) {
                                 channel = socketChannel;
-                                socketChannel.pipeline().addLast(new StringDecoder(),
-                                        new StringEncoder());
+                                socketChannel.pipeline().addLast(new ObjectEncoder(),
+                                        new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
                             }
                         });
                 ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
@@ -57,7 +61,8 @@ public class NettyNetworkService implements NetworkService {
     }
 
     @Override
-    public void sendCommand(String command) {
+    public void sendCommand(Command command) {
+        logger.info("Command is " + command.toString());
         channel.writeAndFlush(command);
     }
 

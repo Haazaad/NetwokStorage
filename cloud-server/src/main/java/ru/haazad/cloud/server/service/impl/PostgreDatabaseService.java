@@ -25,13 +25,17 @@ public class PostgreDatabaseService implements DatabaseService {
     }
 
     @Override
+    public Connection getConnection() {
+        return connection;
+    }
+
+    @Override
     public void connect() {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(ConfigProperty.getProperties("db.url"),
                     ConfigProperty.getProperties("db.user"),
                     ConfigProperty.getProperties("db.password"));
-            logger.info("Connect to database");
         } catch (ClassNotFoundException | SQLException e) {
             logger.throwing(Level.ERROR, e);
         }

@@ -1,6 +1,5 @@
-package ru.haazad.cloud.server.handler;
+package ru.haazad.cloud.server.service.impl.handler;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.logging.log4j.LogManager;
@@ -14,14 +13,4 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
         logger.info("Create new connection");
     }
 
-    @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg){
-        StringBuilder sb = new StringBuilder();
-        ByteBuf buf = (ByteBuf) msg;
-        while (buf.readableBytes() > 0) {
-            sb.append((char) buf.readByte());
-        }
-        logger.info(sb.toString());
-        buf.release();
-    }
 }

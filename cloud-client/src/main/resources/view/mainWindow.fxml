@@ -2,12 +2,39 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="511.0" prefWidth="874.0" style="-fx-background-image: url(img/startBackground.jpg);" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.controller.MainWindowController">
+<AnchorPane prefHeight="732.0" prefWidth="1248" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.controller.MainWindowController">
    <children>
-      <TextField fx:id="loginField" layoutX="326.0" layoutY="188.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your login" />
-      <Button layoutX="374.0" layoutY="275.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="126.0" text="Login" />
-      <Button layoutX="374.0" layoutY="315.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="126.0" text="Register" />
-      <PasswordField fx:id="passwordField" layoutX="326.0" layoutY="231.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your password" />
+      <AnchorPane fx:id="loginWindow" prefHeight="732.0" prefWidth="1248">
+         <children>
+            <TextField fx:id="loginField" layoutX="490.0" layoutY="288.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your login" />
+            <Button layoutX="540.0" layoutY="366.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="126.0" text="Login" />
+            <PasswordField fx:id="passwordField" layoutX="490.0" layoutY="329.0" onAction="#login" prefHeight="25.0" prefWidth="225.0" promptText="Enter your password" />
+            <Text fx:id="registerText" fill="#fffcfc" layoutX="475.0" layoutY="422.0" onMouseDragEntered="#registerNewUser" strokeType="OUTSIDE" strokeWidth="0.0" text="If your don't have account please register" textAlignment="CENTER" underline="true">
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="mainWindowForm" prefHeight="732.0" prefWidth="1248">
+         <children>
+            <TableView layoutX="14.0" layoutY="108.0" prefHeight="549.0" prefWidth="576.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+            <TableView layoutX="658.0" layoutY="108.0" prefHeight="549.0" prefWidth="576.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="C1" />
+                <TableColumn prefWidth="75.0" text="C2" />
+              </columns>
+            </TableView>
+            <TextField layoutX="14.0" layoutY="73.0" prefHeight="25.0" prefWidth="576.0" />
+            <TextField layoutX="658.0" layoutY="73.0" prefHeight="25.0" prefWidth="576.0" />
+            <Button layoutX="239.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="126.0" text="Download" />
+            <Button layoutX="883.0" layoutY="669.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="126.0" text="Upload" />
+         </children></AnchorPane>
    </children>
 </AnchorPane>

@@ -13,14 +13,9 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
 import ru.haazad.cloud.config.ConfigProperty;
-import ru.haazad.cloud.server.factory.Factory;
-import ru.haazad.cloud.server.service.CommandDictionaryService;
-import ru.haazad.cloud.server.service.DatabaseService;
 import ru.haazad.cloud.server.service.ServerService;
 import ru.haazad.cloud.server.service.impl.handler.CommandHandler;
-import ru.haazad.cloud.server.service.impl.handler.ExceptionHandler;
 import ru.haazad.cloud.server.service.impl.handler.MainHandler;
 
 public class NettyServerService implements ServerService {
@@ -49,8 +44,7 @@ public class NettyServerService implements ServerService {
                             socketChannel.pipeline().addLast(new ObjectEncoder(),
                                     new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                                     new CommandHandler(),
-                                    new MainHandler(),
-                                    new ExceptionHandler());
+                                    new MainHandler());
                         }
                     });
             ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();

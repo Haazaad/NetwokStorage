@@ -10,14 +10,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.service.NetworkService;
+import ru.haazad.cloud.client.service.impl.handler.ExceptionHandler;
 import ru.haazad.cloud.config.ConfigProperty;
+
 
 public class NettyNetworkService implements NetworkService {
     private static final Logger logger = LogManager.getLogger(NettyNetworkService.class);
@@ -46,7 +46,8 @@ public class NettyNetworkService implements NetworkService {
                             protected void initChannel(io.netty.channel.socket.SocketChannel socketChannel) {
                                 channel = socketChannel;
                                 socketChannel.pipeline().addLast(new ObjectEncoder(),
-                                        new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
+                                        new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                        new ExceptionHandler());
                             }
                         });
                 ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
@@ -74,7 +75,7 @@ public class NettyNetworkService implements NetworkService {
     @Override
     public void closeConnection() {
         try {
-            channel.close().sync();
+            if (isConnected()) channel.close().sync();
         } catch (InterruptedException e) {
             logger.throwing(Level.ERROR, e);
         }

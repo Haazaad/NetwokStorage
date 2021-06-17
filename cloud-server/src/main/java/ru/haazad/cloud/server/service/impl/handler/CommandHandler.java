@@ -2,6 +2,7 @@ package ru.haazad.cloud.server.service.impl.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
@@ -18,5 +19,10 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
         String commandResult = commandDictionary.processCommand(command);
 
         ctx.writeAndFlush(commandResult);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause){
+        logger.throwing(Level.ERROR, cause);
     }
 }

@@ -1,6 +1,8 @@
 package ru.haazad.cloud.client.factory;
 
+import ru.haazad.cloud.client.service.AlertService;
 import ru.haazad.cloud.client.service.EncryptPasswordService;
+import ru.haazad.cloud.client.service.impl.AlertServiceImpl;
 import ru.haazad.cloud.client.service.impl.EncryptPasswordServiceMD5;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
 
@@ -12,5 +14,9 @@ public class Factory {
 
     public static EncryptPasswordService getEncryptService() {
         return EncryptPasswordServiceMD5.getEncryptService();
+    }
+
+    public static AlertService getAlertService() {
+        return AlertServiceImpl.getAlertService();
     }
 }

@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.Level;
@@ -23,22 +22,22 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-public class MainWindowController implements Initializable {
-    private static final Logger logger = LogManager.getLogger(MainWindowController.class);
+public class LoginWindowController implements Initializable {
+    private static final Logger logger = LogManager.getLogger(LoginWindowController.class);
+
+    private Stage stage;
 
     protected NetworkService networkService;
-    private boolean isLoginOk;
 
-    public AnchorPane loginWindow, mainWindowForm;
     public TextField loginField;
     public PasswordField passwordField;
 
-    private void checkLogin(boolean isLogin) {
-        isLoginOk = isLogin;
-        loginWindow.setVisible(!isLoginOk);
-        loginWindow.setManaged(!isLoginOk);
-        mainWindowForm.setVisible(isLoginOk);
-        mainWindowForm.setVisible(isLoginOk);
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public void login(ActionEvent event) {
@@ -47,7 +46,7 @@ public class MainWindowController implements Initializable {
             return;
         }
         if (!networkService.isConnected()) {
-            networkService = Factory.getNetworkService();
+            networkService = Factory.initializeNetworkService();
         }
         sendCommand("login " + loginField.getText() + " " + Factory.getEncryptService().encryptPassword(passwordField.getText()));
         loginField.clear();
@@ -60,8 +59,7 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        checkLogin(false);
-        networkService = Factory.getNetworkService();
+        networkService = Factory.initializeNetworkService();
     }
 
     protected void sendCommand(String command) {

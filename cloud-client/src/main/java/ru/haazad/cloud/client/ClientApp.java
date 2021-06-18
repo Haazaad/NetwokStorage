@@ -5,18 +5,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ru.haazad.cloud.client.controller.MainWindowController;
+import ru.haazad.cloud.client.controller.LoginWindowController;
 
 public class ClientApp extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/mainWindow.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/loginWindow.fxml"));
         Parent parent = loader.load();
         primaryStage.setScene(new Scene(parent));
         primaryStage.setTitle("Cloud Client");
         primaryStage.setResizable(true);
 
-        MainWindowController controller = loader.getController();
+        LoginWindowController controller = loader.getController();
+        controller.setStage(primaryStage);
         primaryStage.setOnCloseRequest((event) -> controller.disconnect());
         primaryStage.show();
     }

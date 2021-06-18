@@ -15,7 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.service.NetworkService;
-import ru.haazad.cloud.client.service.impl.handler.ExceptionHandler;
+import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
 import ru.haazad.cloud.config.ConfigProperty;
 
 
@@ -28,9 +28,13 @@ public class NettyNetworkService implements NetworkService {
     private NettyNetworkService() {
     }
 
-    public static NettyNetworkService getNetwork() {
+    public static NettyNetworkService initializeNetwork() {
         network = new NettyNetworkService();
         initializeNetworkService();
+        return network;
+    }
+
+    public static NettyNetworkService getNetwork() {
         return network;
     }
 
@@ -47,7 +51,7 @@ public class NettyNetworkService implements NetworkService {
                                 channel = socketChannel;
                                 socketChannel.pipeline().addLast(new ObjectEncoder(),
                                         new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
-                                        new ExceptionHandler());
+                                        new CommandHandler());
                             }
                         });
                 ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
@@ -63,7 +67,7 @@ public class NettyNetworkService implements NetworkService {
 
     @Override
     public void sendCommand(Command command) {
-        logger.info("Command is " + command.toString());
+        logger.debug("Command is " + command.toString());
         channel.writeAndFlush(command);
     }
 

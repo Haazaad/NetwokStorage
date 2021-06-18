@@ -4,7 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
-import ru.haazad.cloud.server.service.CommandService;
+import ru.haazad.cloud.service.CommandService;
 import ru.haazad.cloud.server.service.impl.DbQueryCommand;
 
 import java.sql.ResultSet;
@@ -14,13 +14,13 @@ public class LoginCommand extends DbQueryCommand implements CommandService {
     private static final Logger logger = LogManager.getLogger(LoginCommand.class);
 
     @Override
-    public String processCommand(Command command) {
+    public Command processCommand(Command command) {
         String[] commandArgs = command.getArgs();
         setDbConnection();
         if (!tryLogin(commandArgs[0], commandArgs[1])) {
-            return "Incorrect login or password.";
+            return new Command("login_bad", new String[]{"Incorrect login or password."});
         }
-        return "login_ok";
+        return new Command("login_ok", null);
     }
 
     private boolean tryLogin(String login, String password) {

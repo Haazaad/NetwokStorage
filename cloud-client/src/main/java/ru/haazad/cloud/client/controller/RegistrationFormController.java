@@ -12,7 +12,7 @@ import ru.haazad.cloud.client.factory.Factory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RegistrationFormController extends MainWindowController implements Initializable {
+public class RegistrationFormController extends LoginWindowController implements Initializable {
     private static final Logger logger = LogManager.getLogger(RegistrationFormController.class);
     
     public TextField loginField, emailField;
@@ -36,7 +36,7 @@ public class RegistrationFormController extends MainWindowController implements 
             return;
         }
         if (!networkService.isConnected()) {
-            networkService = Factory.getNetworkService();
+            networkService = Factory.initializeNetworkService();
         }
         String sb = "register " +
                 Factory.getEncryptService().encryptPassword(passwordField.getText()) +

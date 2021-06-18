@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.service.impl.handler;
+package ru.haazad.cloud.client.service.impl.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
-import ru.haazad.cloud.server.factory.Factory;
+import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.service.CommandDictionaryService;
 
 public class CommandHandler extends SimpleChannelInboundHandler<Command> {
@@ -16,10 +16,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
     protected void channelRead0(ChannelHandlerContext ctx, Command command){
         logger.debug("Input command " + command.toString());
         CommandDictionaryService commandDictionary = Factory.getCommandDictionary();
-        Command commandResult = commandDictionary.processCommand(command);
-        logger.debug("Result is " + commandResult.toString());
-
-        ctx.writeAndFlush(commandResult);
+        commandDictionary.processCommand(command);
     }
 
     @Override

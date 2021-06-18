@@ -5,15 +5,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.client.service.AlertService;
 
-public class AlertServiceImpl implements AlertService {
-    private static final Logger logger = LogManager.getLogger(AlertServiceImpl.class);
+public class ClientAlertService implements AlertService {
+    private static final Logger logger = LogManager.getLogger(ClientAlertService.class);
 
-    private static AlertServiceImpl alertService;
+    private static ClientAlertService alertService;
 
-    private AlertServiceImpl(){}
+    private ClientAlertService(){}
 
-    public static AlertServiceImpl getAlertService() {
-        alertService = new AlertServiceImpl();
+    public static ClientAlertService getAlertService() {
+        alertService = new ClientAlertService();
         return alertService;
     }
 

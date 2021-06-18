@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.factory.Factory;
 
 import java.net.URL;
@@ -38,11 +39,10 @@ public class RegistrationFormController extends LoginWindowController implements
         if (!networkService.isConnected()) {
             networkService = Factory.initializeNetworkService();
         }
-        String sb = "register " +
-                Factory.getEncryptService().encryptPassword(passwordField.getText()) +
-                " " +
-                emailField.getText();
-        sendCommand(sb);
+        networkService.sendCommand(new Command("register", new Object[]{
+                Factory.getEncryptService().encryptPassword(passwordField.getText()),
+                emailField.getText()
+        }));
     }
 
     public void closeForm(ActionEvent event) {

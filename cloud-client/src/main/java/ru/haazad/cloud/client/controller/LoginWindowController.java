@@ -32,9 +32,6 @@ public class LoginWindowController implements Initializable {
     public TextField loginField;
     public PasswordField passwordField;
 
-    public Stage getStage() {
-        return stage;
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -48,7 +45,10 @@ public class LoginWindowController implements Initializable {
         if (!networkService.isConnected()) {
             networkService = Factory.initializeNetworkService();
         }
-        sendCommand("login " + loginField.getText() + " " + Factory.getEncryptService().encryptPassword(passwordField.getText()));
+        networkService.sendCommand(new Command("login", new Object[]{
+                loginField.getText(),
+                Factory.getEncryptService().encryptPassword(passwordField.getText())
+        }));
         loginField.clear();
         passwordField.clear();
     }
@@ -62,16 +62,8 @@ public class LoginWindowController implements Initializable {
         networkService = Factory.initializeNetworkService();
     }
 
-    protected void sendCommand(String command) {
-        String[] textCommand = command.trim().split("\\s");
-        if (textCommand.length > 1) {
-            String[] commandArgs = Arrays.copyOfRange(textCommand, 1, textCommand.length);
-            networkService.sendCommand(new Command(textCommand[0], commandArgs));
-        }
-    }
 
-
-    public void registerNewUser(MouseEvent mouseEvent) {
+    public void callRegistrationForm(MouseEvent mouseEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/registrationWindow.fxml"));
             Parent child = loader.load();

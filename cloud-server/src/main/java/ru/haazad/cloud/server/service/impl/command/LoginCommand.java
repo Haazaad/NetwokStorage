@@ -15,22 +15,21 @@ public class LoginCommand extends DbQueryCommand implements CommandService {
 
     @Override
     public Command processCommand(Command command) {
-        String[] commandArgs = command.getArgs();
-        setDbConnection();
-        if (!tryLogin(commandArgs[0], commandArgs[1])) {
+        if (!tryLogin((String) command.getArgs()[0], (String) command.getArgs()[1])) {
             return new Command("login_bad", new String[]{"Incorrect login or password."});
         }
-        return new Command("login_ok", null);
+        return new Command("login_ok", new Object[]{command.getArgs()[0]});
     }
 
     private boolean tryLogin(String login, String password) {
         try {
-            prepareAuthRequest();
+            setDbConnection();
+            prepareIsRegister();
             preStatement.setString(1, login);
             preStatement.setString(2, password);
             ResultSet resultSet = preStatement.executeQuery();
             while (resultSet.next()) {
-                if (resultSet.getString(1).equals("1")) return true;
+                return resultSet.getBoolean(1);
             }
         } catch (SQLException e) {
             logger.throwing(Level.ERROR, e);
@@ -38,18 +37,6 @@ public class LoginCommand extends DbQueryCommand implements CommandService {
             closeDbConnection();
         }
         return false;
-    }
-
-    private void prepareAuthRequest() {
-        try {
-            preStatement = dbConnection.prepareStatement("select count(1)\n" +
-                    "from users u\n" +
-                    "left join user_auc a on a.user_id=u.user_id\n" +
-                    "where u.login = ?\n" +
-                    "and a.password = ?");
-        } catch (SQLException e) {
-            logger.throwing(Level.ERROR, e);
-        }
     }
 
     @Override

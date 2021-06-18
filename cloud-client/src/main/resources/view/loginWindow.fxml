@@ -14,7 +14,7 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Text fill="#280aee" layoutX="102.0" layoutY="236.0" onMouseClicked="#registerNewUser" strokeType="OUTSIDE" strokeWidth="0.0" text="Click heare to register" underline="true">
+      <Text fill="#280aee" layoutX="102.0" layoutY="236.0" onMouseClicked="#callRegistrationForm" strokeType="OUTSIDE" strokeWidth="0.0" text="Click heare to register" underline="true">
          <font>
             <Font size="14.0" />
          </font>

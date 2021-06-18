@@ -9,5 +9,5 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class Command implements Serializable {
     private String commandName;
-    private String[] args;
+    private Object[] args;
 }

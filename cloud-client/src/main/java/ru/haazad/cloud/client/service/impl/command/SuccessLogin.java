@@ -30,6 +30,7 @@ public class SuccessLogin implements CommandService {
                 stage.setResizable(false);
                 stage.setScene(new Scene(child));
                 ApplicationWindowController secondaryController = secondary.getController();
+                secondaryController.setUsername((String) command.getArgs()[0]);
                 stage.setOnCloseRequest((event) -> secondaryController.disconnect());
                 stage.show();
             });

@@ -30,4 +30,12 @@ public class DbQueryCommand {
             logger.throwing(Level.ERROR, e);
         }
     }
+
+    protected void prepareIsRegister() {
+        try {
+            preStatement = dbConnection.prepareStatement("select isRegister(?, ?)");
+        } catch (SQLException e) {
+            logger.throwing(Level.ERROR, e);
+        }
+    }
 }

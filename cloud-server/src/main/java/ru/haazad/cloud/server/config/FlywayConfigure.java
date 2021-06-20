@@ -1,4 +1,4 @@
-package ru.haazad.cloud.config;
+package ru.haazad.cloud.server.config;
 
 import org.flywaydb.core.Flyway;
 

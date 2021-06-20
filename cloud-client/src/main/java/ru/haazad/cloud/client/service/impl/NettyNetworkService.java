@@ -14,9 +14,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
+import ru.haazad.cloud.client.config.ConfigProperty;
 import ru.haazad.cloud.client.service.NetworkService;
 import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
-import ru.haazad.cloud.config.ConfigProperty;
 
 
 public class NettyNetworkService implements NetworkService {

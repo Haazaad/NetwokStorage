@@ -2,6 +2,7 @@ package ru.haazad.cloud.client.service.impl.command;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -11,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.controller.ApplicationWindowController;
+import ru.haazad.cloud.client.controller.LoginWindowController;
+import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.service.CommandService;
 
 import java.io.IOException;
@@ -32,12 +35,19 @@ public class SuccessLogin implements CommandService {
                 ApplicationWindowController secondaryController = secondary.getController();
                 secondaryController.setUsername((String) command.getArgs()[0]);
                 stage.setOnCloseRequest((event) -> secondaryController.disconnect());
+                switchingScene(secondaryController);
                 stage.show();
             });
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);
         }
         return null;
+    }
+
+    private void switchingScene(Initializable controller) {
+        LoginWindowController loginController = (LoginWindowController) Factory.getActiveController();
+        loginController.getStage().close();
+        Factory.setActiveController(controller);
     }
 
     @Override

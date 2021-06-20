@@ -2,12 +2,23 @@ package ru.haazad.cloud.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import ru.haazad.cloud.client.controller.LoginWindowController;
 
 public class ClientApp extends Application {
+    private static Initializable activeController;
+
+    public static Initializable getActiveController() {
+        return activeController;
+    }
+
+    public static void setActiveController(Initializable controller) {
+       activeController = controller;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/loginWindow.fxml"));
@@ -18,6 +29,7 @@ public class ClientApp extends Application {
 
         LoginWindowController controller = loader.getController();
         controller.setStage(primaryStage);
+        setActiveController(controller);
         primaryStage.setOnCloseRequest((event) -> controller.disconnect());
         primaryStage.show();
     }

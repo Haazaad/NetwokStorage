@@ -1,16 +1,45 @@
 package ru.haazad.cloud.client.service.impl.command;
 
-import ru.haazad.cloud.Command;
-import ru.haazad.cloud.service.CommandService;
+import ru.haazad.cloud.client.config.ConfigProperty;
 
-public class ViewFilesInDirectoryCommand implements CommandService {
-    @Override
-    public Command processCommand(Command command) {
-        return null;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ViewFilesInDirectoryCommand {
+
+    private ViewFilesInDirectoryCommand view;
+
+    public ViewFilesInDirectoryCommand() {
     }
 
-    @Override
-    public String getCommand() {
-        return "dir";
+    public ViewFilesInDirectoryCommand getView() {
+        view = new ViewFilesInDirectoryCommand();
+        return view;
     }
+
+    public Path getDirectoryPath(String str) {
+        str = (str == null) ? ConfigProperty.getProperties("src.directory") : str;
+        Path path = Paths.get(str);
+        return path.toAbsolutePath().normalize();
+    }
+
+    public List<String> getFilesInDirectory(Path path) {
+        List<String> list = new ArrayList<>();
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
+            for (Path p: stream) {
+                list.add(p.getFileName().toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
 }

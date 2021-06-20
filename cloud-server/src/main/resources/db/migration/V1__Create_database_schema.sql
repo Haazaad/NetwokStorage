@@ -58,5 +58,5 @@ begin
 end;
 $$ language plpgsql;
 
-INSERT INTO "users" (login, email) VALUES('Test', 'test@test.com');
+INSERT INTO "users" (login, email) VALUES('test', 'test@test.com');
 INSERT INTO "user_auc" (user_id, password) VALUES (1, 'b59c67bf196a4758191e42f76670ceba');

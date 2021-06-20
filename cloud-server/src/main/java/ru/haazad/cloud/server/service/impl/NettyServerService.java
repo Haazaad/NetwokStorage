@@ -13,7 +13,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.config.ConfigProperty;
+import ru.haazad.cloud.server.config.ConfigProperty;
 import ru.haazad.cloud.server.service.ServerService;
 import ru.haazad.cloud.server.service.impl.handler.CommandHandler;
 import ru.haazad.cloud.server.service.impl.handler.MainHandler;

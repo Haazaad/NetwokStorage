@@ -5,7 +5,7 @@
 
 <AnchorPane prefHeight="585.0" prefWidth="1166.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.controller.ApplicationWindowController">
    <children>
-      <TextField fx:id="clientPathFolder" layoutX="14.0" layoutY="22.0" prefHeight="25.0" prefWidth="564.0" />
+      <TextField fx:id="clientPathFolder" layoutX="14.0" layoutY="22.0" onAction="#moveToClientDirectory" prefHeight="25.0" prefWidth="564.0" />
       <TextField fx:id="serverPathFolder" layoutX="588.0" layoutY="22.0" prefHeight="25.0" prefWidth="564.0" />
       <ListView fx:id="clientDirectoryView" layoutX="14.0" layoutY="63.0" prefHeight="467.0" prefWidth="564.0" />
       <ListView fx:id="serverDirectoryView" layoutX="588.0" layoutY="63.0" prefHeight="467.0" prefWidth="564.0" />

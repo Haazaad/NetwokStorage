@@ -1,4 +1,4 @@
-package ru.haazad.cloud.config;
+package ru.haazad.cloud.server.config;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigProperty {
-    private static final String PROPERTY_FILE = "cloud-common/src/main/resources/config.properties";
+    private static final String PROPERTY_FILE = "cloud-server/src/main/resources/config.properties";
     private static final Properties properties = new Properties();
 
     private ConfigProperty() {}

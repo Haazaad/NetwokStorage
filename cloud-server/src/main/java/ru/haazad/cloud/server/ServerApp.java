@@ -2,7 +2,7 @@ package ru.haazad.cloud.server;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.config.FlywayConfigure;
+import ru.haazad.cloud.server.config.FlywayConfigure;
 import ru.haazad.cloud.server.factory.Factory;
 
 public class ServerApp {

@@ -19,7 +19,6 @@ import ru.haazad.cloud.client.service.NetworkService;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class LoginWindowController implements Initializable {
@@ -35,6 +34,10 @@ public class LoginWindowController implements Initializable {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public void login(ActionEvent event) {

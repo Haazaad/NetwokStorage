@@ -1,8 +1,9 @@
 package ru.haazad.cloud.server.factory;
 
+import ru.haazad.cloud.server.service.CommandService;
 import ru.haazad.cloud.server.service.impl.command.RegisterCommand;
-import ru.haazad.cloud.service.CommandDictionaryService;
-import ru.haazad.cloud.service.CommandService;
+import ru.haazad.cloud.server.service.impl.command.ViewFilesOnServerCommand;
+import ru.haazad.cloud.server.service.CommandDictionaryService;
 import ru.haazad.cloud.server.service.DatabaseService;
 import ru.haazad.cloud.server.service.ServerService;
 import ru.haazad.cloud.server.service.impl.ServerCommandDictionaryService;
@@ -29,6 +30,7 @@ public class Factory {
 
     public static List<CommandService> getCommandServices() {
         return Arrays.asList(new LoginCommand(),
-                new RegisterCommand());
+                new RegisterCommand(),
+                new ViewFilesOnServerCommand());
     }
 }

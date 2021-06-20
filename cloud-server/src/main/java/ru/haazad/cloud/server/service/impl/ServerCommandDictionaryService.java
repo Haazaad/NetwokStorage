@@ -2,8 +2,8 @@ package ru.haazad.cloud.server.service.impl;
 
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.server.factory.Factory;
-import ru.haazad.cloud.service.CommandDictionaryService;
-import ru.haazad.cloud.service.CommandService;
+import ru.haazad.cloud.server.service.CommandDictionaryService;
+import ru.haazad.cloud.server.service.CommandService;
 
 import java.util.Collections;
 import java.util.HashMap;

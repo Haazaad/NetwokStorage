@@ -10,15 +10,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ViewFilesInDirectoryCommand {
+public class ViewFilesInClientDirectory {
 
-    private ViewFilesInDirectoryCommand view;
+    private ViewFilesInClientDirectory view;
 
-    public ViewFilesInDirectoryCommand() {
+    public ViewFilesInClientDirectory() {
     }
 
-    public ViewFilesInDirectoryCommand getView() {
-        view = new ViewFilesInDirectoryCommand();
+    public ViewFilesInClientDirectory getView() {
+        view = new ViewFilesInClientDirectory();
         return view;
     }
 

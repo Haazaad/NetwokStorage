@@ -1,4 +1,4 @@
-package ru.haazad.cloud.service;
+package ru.haazad.cloud.server.service;
 
 import ru.haazad.cloud.Command;
 

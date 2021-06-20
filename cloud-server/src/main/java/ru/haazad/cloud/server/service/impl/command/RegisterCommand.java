@@ -4,8 +4,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
+import ru.haazad.cloud.server.service.CommandService;
 import ru.haazad.cloud.server.service.impl.DbQueryCommand;
-import ru.haazad.cloud.service.CommandService;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

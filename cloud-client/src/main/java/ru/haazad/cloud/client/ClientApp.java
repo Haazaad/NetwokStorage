@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import ru.haazad.cloud.client.controller.LoginWindowController;
 
 public class ClientApp extends Application {
+    private static String username;
+
     private static Initializable activeController;
 
     public static Initializable getActiveController() {
@@ -17,6 +19,14 @@ public class ClientApp extends Application {
 
     public static void setActiveController(Initializable controller) {
        activeController = controller;
+    }
+
+    public static String getUsername() {
+        return username;
+    }
+
+    public static void setUsername(String name) {
+        username = name;
     }
 
     @Override

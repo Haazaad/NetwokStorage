@@ -4,8 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.factory.Factory;
-import ru.haazad.cloud.service.CommandDictionaryService;
-import ru.haazad.cloud.service.CommandService;
+import ru.haazad.cloud.client.service.CommandService;
+import ru.haazad.cloud.client.service.CommandDictionaryService;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,9 +32,10 @@ public class ClientCommandDictionaryService implements CommandDictionaryService 
     }
 
     @Override
-    public Command processCommand(Command command) {
+    public void processCommand(Command command) {
         if (dictionaryService.containsKey(command.getCommandName())) {
-            return dictionaryService.get(command.getCommandName()).processCommand(command);
+            dictionaryService.get(command.getCommandName()).processCommand(command);
+            return;
         }
         throw new IllegalArgumentException("The command " + command.getCommandName() + " does not exist");
     }

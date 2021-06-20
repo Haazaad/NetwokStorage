@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.NetworkService;
 
@@ -15,21 +16,11 @@ import java.util.ResourceBundle;
 
 public class ApplicationWindowController implements Initializable {
 
-    private String username;
-
     public TextField clientPathFolder, serverPathFolder;
     public ListView<String> clientDirectoryView, serverDirectoryView;
     public Button uploadButton, downloadButton;
 
     private NetworkService network;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -52,5 +43,10 @@ public class ApplicationWindowController implements Initializable {
     public void moveToClientDirectory(ActionEvent event) {
         clientDirectoryView.getItems().clear();
         listClientDirectory(Factory.getView().getDirectoryPath(clientPathFolder.getText()));
+    }
+
+    public void moveToServerDirectory(ActionEvent event) {
+        String path = serverPathFolder.getText();
+        network.sendCommand(new Command("ls", new Object[]{Factory.getUsername()}));
     }
 }

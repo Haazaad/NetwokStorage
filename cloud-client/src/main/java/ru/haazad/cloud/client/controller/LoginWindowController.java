@@ -71,6 +71,9 @@ public class LoginWindowController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/registrationWindow.fxml"));
             Parent child = loader.load();
             Stage stage = new Stage();
+            RegistrationFormController controller = loader.getController();
+            Factory.setSecondaryController(controller);
+            controller.setStage(stage);
             stage.setTitle("Cloud Client. Register new user");
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);

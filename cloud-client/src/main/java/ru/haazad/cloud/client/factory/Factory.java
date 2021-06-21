@@ -34,6 +34,10 @@ public class Factory {
         ClientApp.setActiveController(controller);
     }
 
+    public static Initializable getSecondaryController() { return ClientApp.getSecondaryController();}
+
+    public static void setSecondaryController(Initializable controller) {ClientApp.setSecondaryController(controller);}
+
     public static NetworkService initializeNetworkService() {
         return NettyNetworkService.initializeNetwork();
     }
@@ -61,6 +65,7 @@ public class Factory {
     public static List<CommandService> getCommandServices() {
         return Arrays.asList(new SuccessLogin(),
                 new BadLogin(),
+                new SuccessRegistration(),
                 new ErrorRegistration(),
                 new SuccessViewFilesOnServer());
     }

@@ -38,7 +38,6 @@ public class SuccessLogin implements CommandService {
                 stage.setScene(new Scene(child));
                 stage.setOnCloseRequest((event) -> secondaryController.disconnect());
                 stage.show();
-                getServerView();
             });
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);
@@ -49,11 +48,6 @@ public class SuccessLogin implements CommandService {
         LoginWindowController loginController = (LoginWindowController) Factory.getActiveController();
         loginController.getStage().close();
         Factory.setActiveController(controller);
-    }
-
-    private void getServerView() {
-        NetworkService networkService = Factory.getNetworkService();
-        networkService.sendCommand(new Command("ls", new Object[]{Factory.getUsername()}));
     }
 
     @Override

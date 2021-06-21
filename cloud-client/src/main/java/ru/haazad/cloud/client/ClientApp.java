@@ -12,6 +12,7 @@ public class ClientApp extends Application {
     private static String username;
 
     private static Initializable activeController;
+    private static Initializable secondaryController;
 
     public static Initializable getActiveController() {
         return activeController;
@@ -19,6 +20,14 @@ public class ClientApp extends Application {
 
     public static void setActiveController(Initializable controller) {
        activeController = controller;
+    }
+
+    public static Initializable getSecondaryController() {
+        return secondaryController;
+    }
+
+    public static void setSecondaryController(Initializable secondaryController) {
+        ClientApp.secondaryController = secondaryController;
     }
 
     public static String getUsername() {

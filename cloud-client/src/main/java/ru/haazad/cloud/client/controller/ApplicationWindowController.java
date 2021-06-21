@@ -27,6 +27,7 @@ public class ApplicationWindowController implements Initializable {
         network = Factory.getNetworkService();
         clientPathFolder.appendText(Factory.getView().getDirectoryPath(null).toString());
         listClientDirectory(Factory.getView().getDirectoryPath(null));
+        network.sendCommand(new Command("ls", new Object[]{Factory.getUsername()}));
     }
 
     public void disconnect() {

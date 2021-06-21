@@ -9,22 +9,32 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
 import ru.haazad.cloud.client.factory.Factory;
+import ru.haazad.cloud.client.service.NetworkService;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RegistrationFormController extends LoginWindowController implements Initializable {
+public class RegistrationFormController implements Initializable {
     private static final Logger logger = LogManager.getLogger(RegistrationFormController.class);
-    
+
+    private NetworkService network;
+
+    private Stage stage;
+
     public TextField loginField, emailField;
     public PasswordField passwordField, confirmPasswordField;
 
-    private boolean isRegister;
-    
-    
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        isRegister = false;
+        network = Factory.getNetworkService();
     }
 
     public void register(ActionEvent event) {
@@ -36,10 +46,11 @@ public class RegistrationFormController extends LoginWindowController implements
             Factory.getAlertService().showInfoAlert("The password was incorrectly verified");
             return;
         }
-        if (!networkService.isConnected()) {
-            networkService = Factory.initializeNetworkService();
+        if (!network.isConnected()) {
+            network = Factory.initializeNetworkService();
         }
-        networkService.sendCommand(new Command("register", new Object[]{
+        network.sendCommand(new Command("register", new Object[]{
+                loginField.getText(),
                 Factory.getEncryptService().encryptPassword(passwordField.getText()),
                 emailField.getText()
         }));

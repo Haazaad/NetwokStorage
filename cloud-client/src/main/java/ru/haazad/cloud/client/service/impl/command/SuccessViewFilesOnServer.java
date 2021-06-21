@@ -28,6 +28,6 @@ public class SuccessViewFilesOnServer implements CommandService {
 
     @Override
     public String getCommand() {
-        return "ls_ok";
+        return "ls";
     }
 }

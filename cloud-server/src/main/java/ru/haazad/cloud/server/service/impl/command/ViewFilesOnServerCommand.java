@@ -31,7 +31,7 @@ public class ViewFilesOnServerCommand implements CommandService {
         } else {
             listFiles = getFilesInDirectory(srcDirectory);        }
 
-        return new Command("ls_ok", new Object[]{srcDirectory, listFiles});
+        return new Command("ls", new Object[]{srcDirectory, listFiles});
     }
 
     private List<String> getFilesInDirectory(Path path) {

@@ -14,6 +14,7 @@ public class SuccessRegistration implements CommandService {
             controller.getStage().close();
             Factory.getAlertService().showInfoAlert("Registration was successful. Please log in.");
         });
+        Factory.setSecondaryController(null);
     }
 
     @Override

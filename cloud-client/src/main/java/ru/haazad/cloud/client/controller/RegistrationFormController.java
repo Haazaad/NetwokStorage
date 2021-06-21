@@ -34,16 +34,19 @@ public class RegistrationFormController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        logger.trace("Registration form invoked");
         network = Factory.getNetworkService();
     }
 
     public void register(ActionEvent event) {
         if (loginField.getText().isEmpty() || passwordField.getText().isEmpty() || emailField.getText().isEmpty()) {
             Factory.getAlertService().showInfoAlert("Not all required fields have been filled in");
+            logger.info("Not all required fields have been filled in");
             return;
         }
         if (!passwordField.getText().equals(confirmPasswordField.getText())) {
             Factory.getAlertService().showInfoAlert("The password was incorrectly verified");
+            logger.info("The password was incorrectly verified");
             return;
         }
         if (!network.isConnected()) {
@@ -57,7 +60,6 @@ public class RegistrationFormController implements Initializable {
     }
 
     public void closeForm(ActionEvent event) {
-        Stage stage = (Stage) loginField.getScene().getWindow();
         stage.close();
     }
 }

@@ -13,10 +13,11 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
     private static final Logger logger = LogManager.getLogger(CommandHandler.class);
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Command command){
+    protected void channelRead0(ChannelHandlerContext ctx, Command command) {
         logger.debug("Input command " + command.toString());
         CommandDictionaryService commandDictionary = Factory.getCommandDictionary();
         commandDictionary.processCommand(command);
+
     }
 
     @Override

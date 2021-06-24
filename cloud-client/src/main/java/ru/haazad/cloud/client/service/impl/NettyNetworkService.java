@@ -39,7 +39,7 @@ public class NettyNetworkService implements NetworkService {
     }
 
     private static void initializeNetworkService() {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
                 Bootstrap b = new Bootstrap();
@@ -49,8 +49,8 @@ public class NettyNetworkService implements NetworkService {
                             @Override
                             protected void initChannel(io.netty.channel.socket.SocketChannel socketChannel) {
                                 channel = socketChannel;
-                                socketChannel.pipeline().addLast(new ObjectEncoder(),
-                                        new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                socketChannel.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                        new ObjectEncoder(),
                                         new CommandHandler());
                             }
                         });
@@ -62,7 +62,9 @@ public class NettyNetworkService implements NetworkService {
             } finally {
                 workerGroup.shutdownGracefully();
             }
-        }).start();
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     @Override

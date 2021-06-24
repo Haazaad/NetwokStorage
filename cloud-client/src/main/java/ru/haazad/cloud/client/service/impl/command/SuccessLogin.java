@@ -15,7 +15,6 @@ import ru.haazad.cloud.client.controller.ApplicationWindowController;
 import ru.haazad.cloud.client.controller.LoginWindowController;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.CommandService;
-import ru.haazad.cloud.client.service.NetworkService;
 
 import java.io.IOException;
 
@@ -29,8 +28,10 @@ public class SuccessLogin implements CommandService {
             FXMLLoader secondary = new FXMLLoader(getClass().getClassLoader().getResource("view/applicationWindow.fxml"));
             Parent child = secondary.load();
             ApplicationWindowController secondaryController = secondary.getController();
+            LoginWindowController loginController = (LoginWindowController) Factory.getActiveController();
+            Factory.setActiveController(secondaryController);
             Platform.runLater(() -> {
-                switchingScene(secondaryController);
+                loginController.getStage().close();
                 Stage stage = new Stage();
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setTitle("Cloud Client.");
@@ -42,12 +43,6 @@ public class SuccessLogin implements CommandService {
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);
         }
-    }
-
-    private void switchingScene(Initializable controller) {
-        LoginWindowController loginController = (LoginWindowController) Factory.getActiveController();
-        loginController.getStage().close();
-        Factory.setActiveController(controller);
     }
 
     @Override

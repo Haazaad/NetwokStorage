@@ -29,15 +29,16 @@ public class ViewFilesOnServerCommand implements CommandService {
             Path path = getDirectoryPath(directoryPath);
             listFiles = getFilesInDirectory(path);
         } else {
-            listFiles = getFilesInDirectory(srcDirectory);        }
+            listFiles = getFilesInDirectory(srcDirectory);
+        }
 
-        return new Command("ls", new Object[]{srcDirectory, listFiles});
+        return new Command("ls", new Object[]{srcDirectory.toString(), listFiles});
     }
 
     private List<String> getFilesInDirectory(Path path) {
         List<String> list = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-            for (Path p: stream) {
+            for (Path p : stream) {
                 list.add(p.getFileName().toString());
             }
 
@@ -50,7 +51,7 @@ public class ViewFilesOnServerCommand implements CommandService {
     private Path getUserDirectory(String login) {
         String url = ConfigProperty.getProperties("server.storage.directory") + "/" + login;
         Path path = Paths.get(url);
-        if (!Files.exists(path)){
+        if (!Files.exists(path)) {
             try {
                 Files.createDirectory(path);
             } catch (IOException e) {
@@ -61,7 +62,7 @@ public class ViewFilesOnServerCommand implements CommandService {
     }
 
     private Path getDirectoryPath(String str) {
-        String url = ConfigProperty.getProperties("server.storage.directory" ) + "/" + str;
+        String url = ConfigProperty.getProperties("server.storage.directory") + "/" + str;
         Path path = Paths.get(url);
         return path.toAbsolutePath().normalize();
     }

@@ -26,7 +26,7 @@ public class LoginWindowController implements Initializable {
 
     private Stage stage;
 
-    protected NetworkService networkService;
+    private NetworkService networkService;
 
     public TextField loginField;
     public PasswordField passwordField;

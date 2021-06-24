@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.Command;
+import ru.haazad.cloud.server.factory.Factory;
 import ru.haazad.cloud.server.service.CommandService;
 import ru.haazad.cloud.server.service.impl.DbQueryCommand;
 

@@ -7,13 +7,17 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.haazad.cloud.Command;
+import ru.haazad.cloud.client.config.ConfigProperty;
 import ru.haazad.cloud.client.service.NetworkService;
-import ru.haazad.cloud.config.ConfigProperty;
+import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
+
 
 public class NettyNetworkService implements NetworkService {
     private static final Logger logger = LogManager.getLogger(NettyNetworkService.class);
@@ -24,14 +28,18 @@ public class NettyNetworkService implements NetworkService {
     private NettyNetworkService() {
     }
 
-    public static NettyNetworkService getNetwork() {
+    public static NettyNetworkService initializeNetwork() {
         network = new NettyNetworkService();
         initializeNetworkService();
         return network;
     }
 
+    public static NettyNetworkService getNetwork() {
+        return network;
+    }
+
     private static void initializeNetworkService() {
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             EventLoopGroup workerGroup = new NioEventLoopGroup();
             try {
                 Bootstrap b = new Bootstrap();
@@ -41,23 +49,27 @@ public class NettyNetworkService implements NetworkService {
                             @Override
                             protected void initChannel(io.netty.channel.socket.SocketChannel socketChannel) {
                                 channel = socketChannel;
-                                socketChannel.pipeline().addLast(new StringDecoder(),
-                                        new StringEncoder());
+                                socketChannel.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                        new ObjectEncoder(),
+                                        new CommandHandler());
                             }
                         });
                 ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
-                logger.info("Server is running on port: " + ConfigProperty.getProperties("server.port"));
+                logger.info("Connecting to server " + ConfigProperty.getProperties("server.host") + " on port " + ConfigProperty.getProperties("server.port"));
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 logger.throwing(Level.ERROR, e);
             } finally {
                 workerGroup.shutdownGracefully();
             }
-        }).start();
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     @Override
-    public void sendCommand(String command) {
+    public void sendCommand(Command command) {
+        logger.debug("Command is " + command.toString());
         channel.writeAndFlush(command);
     }
 
@@ -69,9 +81,14 @@ public class NettyNetworkService implements NetworkService {
     @Override
     public void closeConnection() {
         try {
-            channel.close().sync();
+            if (isConnected()) channel.close().sync();
         } catch (InterruptedException e) {
             logger.throwing(Level.ERROR, e);
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return channel != null && !channel.isShutdown();
     }
 }

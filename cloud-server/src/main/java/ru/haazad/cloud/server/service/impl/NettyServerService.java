@@ -7,14 +7,17 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.config.ConfigProperty;
+import ru.haazad.cloud.server.config.ConfigProperty;
 import ru.haazad.cloud.server.service.ServerService;
-import ru.haazad.cloud.server.service.handler.MainHandler;
+import ru.haazad.cloud.server.service.impl.handler.ChannelDisconnectHandler;
+import ru.haazad.cloud.server.service.impl.handler.CommandHandler;
+import ru.haazad.cloud.server.service.impl.handler.ChannelActivateHandler;
 
 public class NettyServerService implements ServerService {
     private static final Logger logger = LogManager.getLogger(NettyServerService.class);
@@ -39,10 +42,16 @@ public class NettyServerService implements ServerService {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) {
-                            socketChannel.pipeline().addLast(new MainHandler());
+                            socketChannel.pipeline().addLast(new ObjectEncoder(),
+                                    new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
+                                    new ChannelActivateHandler(),
+                                    new CommandHandler(),
+                                    new ChannelDisconnectHandler()
+                                    );
                         }
                     });
             ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
+            logger.info("Server is running on port: " + ConfigProperty.getProperties("server.port"));
             future.channel().closeFuture().sync();
         } catch (Exception e) {
             logger.throwing(Level.ERROR, e);

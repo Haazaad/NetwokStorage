@@ -8,7 +8,7 @@ import ru.haazad.cloud.client.service.EncryptPasswordService;
 import ru.haazad.cloud.client.service.NetworkService;
 import ru.haazad.cloud.client.service.impl.ClientAlertService;
 import ru.haazad.cloud.client.service.impl.ClientCommandDictionaryService;
-import ru.haazad.cloud.client.service.impl.EncryptPasswordServiceMD5;
+import ru.haazad.cloud.client.service.impl.MD5EncryptPasswordService;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
 import ru.haazad.cloud.client.service.impl.command.*;
 import ru.haazad.cloud.client.service.CommandDictionaryService;
@@ -47,7 +47,7 @@ public class Factory {
     }
 
     public static EncryptPasswordService getEncryptService() {
-        return EncryptPasswordServiceMD5.getEncryptService();
+        return MD5EncryptPasswordService.getEncryptService();
     }
 
     public static AlertService getAlertService() {

@@ -10,15 +10,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class EncryptPasswordServiceMD5 implements EncryptPasswordService {
-    private static final Logger logger = LogManager.getLogger(EncryptPasswordServiceMD5.class);
+public class MD5EncryptPasswordService implements EncryptPasswordService {
+    private static final Logger logger = LogManager.getLogger(MD5EncryptPasswordService.class);
 
-    private static EncryptPasswordServiceMD5 encryptService;
+    private static MD5EncryptPasswordService encryptService;
 
-    private EncryptPasswordServiceMD5(){}
+    private MD5EncryptPasswordService(){}
 
-    public static EncryptPasswordServiceMD5 getEncryptService() {
-        encryptService = new EncryptPasswordServiceMD5();
+    public static MD5EncryptPasswordService getEncryptService() {
+        encryptService = new MD5EncryptPasswordService();
         return encryptService;
     }
 

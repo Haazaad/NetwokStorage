@@ -2,6 +2,7 @@ package ru.haazad.cloud.server.factory;
 
 import ru.haazad.cloud.server.service.CommandService;
 import ru.haazad.cloud.server.service.impl.command.RegisterCommand;
+import ru.haazad.cloud.server.service.impl.command.FilesUploadHandler;
 import ru.haazad.cloud.server.service.impl.command.ViewFilesOnServerCommand;
 import ru.haazad.cloud.server.service.CommandDictionaryService;
 import ru.haazad.cloud.server.service.DatabaseService;

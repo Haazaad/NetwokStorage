@@ -2,16 +2,12 @@ package ru.haazad.cloud.client.factory;
 
 import javafx.fxml.Initializable;
 import ru.haazad.cloud.client.ClientApp;
-import ru.haazad.cloud.client.service.AlertService;
-import ru.haazad.cloud.client.service.CommandService;
-import ru.haazad.cloud.client.service.EncryptPasswordService;
-import ru.haazad.cloud.client.service.NetworkService;
+import ru.haazad.cloud.client.service.*;
 import ru.haazad.cloud.client.service.impl.ClientAlertService;
 import ru.haazad.cloud.client.service.impl.ClientCommandDictionaryService;
 import ru.haazad.cloud.client.service.impl.MD5EncryptPasswordService;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
 import ru.haazad.cloud.client.service.impl.command.*;
-import ru.haazad.cloud.client.service.CommandDictionaryService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +49,8 @@ public class Factory {
     public static AlertService getAlertService() {
         return ClientAlertService.getAlertService();
     }
+
+    public static FileTransferService getFileTransferService() {return FileTransferService.getFiletransferService();}
 
     public static CommandDictionaryService getCommandDictionary() {
         return new ClientCommandDictionaryService();

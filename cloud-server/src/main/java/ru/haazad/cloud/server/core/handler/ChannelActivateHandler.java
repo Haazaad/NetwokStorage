@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.service.impl.handler;
+package ru.haazad.cloud.server.core.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

@@ -1,15 +1,15 @@
 package ru.haazad.cloud.server.factory;
 
+import ru.haazad.cloud.server.service.CommandDictionaryService;
+import ru.haazad.cloud.server.core.DatabaseService;
+import ru.haazad.cloud.server.core.ServerService;
 import ru.haazad.cloud.server.service.CommandService;
+import ru.haazad.cloud.server.service.impl.ServerCommandDictionaryService;
+import ru.haazad.cloud.server.core.impl.PostgreDatabaseService;
+import ru.haazad.cloud.server.core.impl.NettyServerService;
+import ru.haazad.cloud.server.service.impl.command.LoginCommand;
 import ru.haazad.cloud.server.service.impl.command.RegisterCommand;
 import ru.haazad.cloud.server.service.impl.command.ViewFilesOnServerCommand;
-import ru.haazad.cloud.server.service.CommandDictionaryService;
-import ru.haazad.cloud.server.service.DatabaseService;
-import ru.haazad.cloud.server.service.ServerService;
-import ru.haazad.cloud.server.service.impl.ServerCommandDictionaryService;
-import ru.haazad.cloud.server.service.impl.PostgreDatabaseService;
-import ru.haazad.cloud.server.service.impl.NettyServerService;
-import ru.haazad.cloud.server.service.impl.command.LoginCommand;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +20,12 @@ public class Factory {
         return NettyServerService.initializeServerService();
     }
 
-    public static DatabaseService getDatabaseService() {
+    public static DatabaseService initializeDbService() {
         return PostgreDatabaseService.initializeDbConnection();
+    }
+
+    public static DatabaseService getDatabaseService() {
+        return NettyServerService.getDatabaseService();
     }
 
     public static CommandDictionaryService getCommandDictionary() {

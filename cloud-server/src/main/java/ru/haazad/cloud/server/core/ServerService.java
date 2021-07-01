@@ -1,5 +1,6 @@
-package ru.haazad.cloud.server.service;
+package ru.haazad.cloud.server.core;
 
+@FunctionalInterface
 public interface ServerService {
 
     void startServer();

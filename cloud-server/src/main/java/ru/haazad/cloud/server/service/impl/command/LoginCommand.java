@@ -1,47 +1,25 @@
 package ru.haazad.cloud.server.service.impl.command;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.server.factory.Factory;
 import ru.haazad.cloud.server.service.CommandService;
-import ru.haazad.cloud.server.service.impl.DbQueryCommand;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-public class LoginCommand extends DbQueryCommand implements CommandService {
-    private static final Logger logger = LogManager.getLogger(LoginCommand.class);
+public class LoginCommand implements CommandService {
 
     @Override
     public Command processCommand(Command command) {
-        if (!tryLogin((String) command.getArgs()[0], (String) command.getArgs()[1])) {
-            return new Command("login_bad", new String[]{"Incorrect login or password."});
+        if (!command.haveImportantArgs(2)) {
+            return new Command(CommandName.LOGIN_ERROR, new Object[]{"Not enough parameters for login"});
         }
-        return new Command("login_ok", new Object[]{command.getArgs()[0]});
-    }
-
-    private boolean tryLogin(String login, String password) {
-        try {
-            setDbConnection();
-            prepareIsRegister();
-            preStatement.setString(1, login);
-            preStatement.setString(2, password);
-            ResultSet resultSet = preStatement.executeQuery();
-            while (resultSet.next()) {
-                return resultSet.getBoolean(1);
-            }
-        } catch (SQLException e) {
-            logger.throwing(Level.ERROR, e);
-        } finally {
-            closeDbConnection();
+        if (!Factory.getDatabaseService().tryLogin(command.getArgs())) {
+            return new Command(CommandName.LOGIN_ERROR, new String[]{"Incorrect login or password."});
         }
-        return false;
+        return new Command(CommandName.LOGIN_SUCCESS, new Object[]{command.getArgs()[0]});
     }
 
     @Override
-    public String getCommand() {
-        return "login";
+    public CommandName getCommand() {
+        return CommandName.LOGIN;
     }
 }

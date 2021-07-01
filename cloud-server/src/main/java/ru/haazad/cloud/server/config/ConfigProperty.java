@@ -1,24 +1,27 @@
 package ru.haazad.cloud.server.config;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigProperty {
-    private static final String PROPERTY_FILE = "cloud-server/src/main/resources/config.properties";
     private static final Properties properties = new Properties();
 
-    private ConfigProperty() {}
-
     public static String getProperties(String propertyName) {
-        try {
-            InputStream in = new FileInputStream(PROPERTY_FILE);
+        try (InputStream in = ConfigProperty.class.getClassLoader().getResourceAsStream("config.properties")) {
             properties.load(in);
             return properties.getProperty(propertyName);
         } catch (IOException e) {
             throw new IllegalArgumentException("Unknown property " + propertyName);
         }
+    }
+
+    public static String getServerPort() {
+        return getProperties("server.port");
+    }
+
+    public static String getStorage() {
+        return getProperties("server.storage.directory");
     }
 
 }

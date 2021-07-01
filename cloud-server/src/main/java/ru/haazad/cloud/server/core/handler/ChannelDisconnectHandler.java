@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.service.impl.handler;
+package ru.haazad.cloud.server.core.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -9,7 +9,7 @@ public class ChannelDisconnectHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LogManager.getLogger(ChannelDisconnectHandler.class);
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
         logger.trace("Disconnect connection");
     }
 }

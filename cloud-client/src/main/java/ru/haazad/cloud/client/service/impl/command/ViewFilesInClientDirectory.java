@@ -23,7 +23,7 @@ public class ViewFilesInClientDirectory {
     }
 
     public Path getDirectoryPath(String str) {
-        str = (str == null) ? ConfigProperty.getProperties("src.directory") : str;
+        str = (str == null) ? ConfigProperty.getLocalStorage() : str;
         Path path = Paths.get(str);
         return path.toAbsolutePath().normalize();
     }

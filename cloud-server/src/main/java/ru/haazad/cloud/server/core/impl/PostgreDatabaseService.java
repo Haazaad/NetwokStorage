@@ -102,9 +102,9 @@ public class PostgreDatabaseService implements DatabaseService {
         String login = (String) args[0];
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(String.format("select count(1) from users u where u.login = %s", login));
+            ResultSet resultSet = statement.executeQuery(String.format("select count(1) from users u where u.login = '%s'", login));
             while (resultSet.next()) {
-                return resultSet.getInt(1) == 1;
+                return resultSet.getString(1).equals("1");
             }
             resultSet.close();
             statement.close();

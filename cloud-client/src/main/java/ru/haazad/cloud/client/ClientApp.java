@@ -2,31 +2,31 @@ package ru.haazad.cloud.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ru.haazad.cloud.client.controller.LoginWindowController;
+import ru.haazad.cloud.client.gui.controller.LoginWindowController;
+import ru.haazad.cloud.client.gui.controller.WindowController;
 
 public class ClientApp extends Application {
     private static String username;
 
-    private static Initializable activeController;
-    private static Initializable secondaryController;
+    private static WindowController activeController;
+    private static WindowController secondaryController;
 
-    public static Initializable getActiveController() {
+    public static WindowController getActiveController() {
         return activeController;
     }
 
-    public static void setActiveController(Initializable controller) {
+    public static void setActiveController(WindowController controller) {
        activeController = controller;
     }
 
-    public static Initializable getSecondaryController() {
+    public static WindowController getSecondaryController() {
         return secondaryController;
     }
 
-    public static void setSecondaryController(Initializable secondaryController) {
+    public static void setSecondaryController(WindowController secondaryController) {
         ClientApp.secondaryController = secondaryController;
     }
 
@@ -49,7 +49,7 @@ public class ClientApp extends Application {
         LoginWindowController controller = loader.getController();
         controller.setStage(primaryStage);
         setActiveController(controller);
-        primaryStage.setOnCloseRequest((event) -> controller.disconnect());
+        primaryStage.setOnCloseRequest((event) -> controller.close());
         primaryStage.show();
     }
 }

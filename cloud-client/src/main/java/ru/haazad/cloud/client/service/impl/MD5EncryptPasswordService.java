@@ -1,5 +1,6 @@
 package ru.haazad.cloud.client.service.impl;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,18 +11,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Log4j2
 public class MD5EncryptPasswordService implements EncryptPasswordService {
     private static final Logger logger = LogManager.getLogger(MD5EncryptPasswordService.class);
-
-    private static MD5EncryptPasswordService encryptService;
 
     private MD5EncryptPasswordService(){}
 
     public static MD5EncryptPasswordService getEncryptService() {
-        encryptService = new MD5EncryptPasswordService();
-        return encryptService;
+        return new MD5EncryptPasswordService();
     }
-
     @Override
     public String encryptPassword(String password) {
         MessageDigest digest;

@@ -1,24 +1,22 @@
 package ru.haazad.cloud.client.service.impl.command;
 
-import lombok.extern.log4j.Log4j2;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.CommandService;
 
-@Log4j2
-public class SuccessViewFilesOnServer implements CommandService {
+public class InfoCommand implements CommandService {
+
     @Override
     public void processCommand(Command command) {
-        if (command.haveImportantArgs(2)){
-            Factory.getActiveController().processAction(command.getArgs());
-            return;
+        if (Factory.getSecondaryController() != null) {
+            Factory.getSecondaryController().close();
         }
-        log.error("Not enough parameters for register");
+        Factory.getActiveController().showInfoAlert((String) command.getArgs()[0]);
     }
 
     @Override
     public CommandName getCommand() {
-        return CommandName.LS;
+        return CommandName.INFO;
     }
 }

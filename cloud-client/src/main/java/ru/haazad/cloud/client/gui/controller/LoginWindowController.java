@@ -1,5 +1,6 @@
-package ru.haazad.cloud.client.controller;
+package ru.haazad.cloud.client.gui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,7 +14,8 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.NetworkService;
 
@@ -21,7 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class LoginWindowController implements Initializable {
+public class LoginWindowController implements Initializable, WindowController {
     private static final Logger logger = LogManager.getLogger(LoginWindowController.class);
 
     private Stage stage;
@@ -48,7 +50,7 @@ public class LoginWindowController implements Initializable {
         if (!networkService.isConnected()) {
             networkService = Factory.initializeNetworkService();
         }
-        networkService.sendCommand(new Command("login", new Object[]{
+        networkService.sendCommand(new Command(CommandName.LOGIN, new Object[]{
                 loginField.getText(),
                 Factory.getEncryptService().encryptPassword(passwordField.getText())
         }));
@@ -56,7 +58,7 @@ public class LoginWindowController implements Initializable {
         passwordField.clear();
     }
 
-    public void disconnect() {
+    public void close() {
         networkService.closeConnection();
     }
 
@@ -65,13 +67,45 @@ public class LoginWindowController implements Initializable {
         networkService = Factory.initializeNetworkService();
     }
 
+    public void showErrorAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showErrorAlert(cause));
+    }
+
+    public void showInfoAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showInfoAlert(cause));
+    }
+
+    @Override
+    public void processAction(Object[] args) {
+        Factory.setUsername((String) args[0]);
+        try {
+            FXMLLoader secondary = new FXMLLoader(getClass().getClassLoader().getResource("view/applicationWindow.fxml"));
+            Parent child = secondary.load();
+            WindowController secondaryController = secondary.getController();
+            WindowController loginController = Factory.getActiveController();
+            Factory.setActiveController(secondaryController);
+            Platform.runLater(() -> {
+                loginController.getStage().close();
+                Stage stage = new Stage();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.setTitle("Cloud Client.");
+                stage.setResizable(false);
+                stage.setScene(new Scene(child));
+                secondaryController.setStage(stage);
+                stage.setOnCloseRequest((event) -> secondaryController.close());
+                stage.show();
+            });
+        } catch (IOException e) {
+            logger.throwing(Level.ERROR, e);
+        }
+    }
 
     public void callRegistrationForm(MouseEvent mouseEvent) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("view/registrationWindow.fxml"));
             Parent child = loader.load();
             Stage stage = new Stage();
-            RegistrationFormController controller = loader.getController();
+            WindowController controller = loader.getController();
             Factory.setSecondaryController(controller);
             controller.setStage(stage);
             stage.setTitle("Cloud Client. Register new user");

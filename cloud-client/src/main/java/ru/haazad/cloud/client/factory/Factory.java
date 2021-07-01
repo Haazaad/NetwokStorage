@@ -1,9 +1,10 @@
 package ru.haazad.cloud.client.factory;
 
-import javafx.fxml.Initializable;
 import ru.haazad.cloud.client.ClientApp;
+import ru.haazad.cloud.client.gui.controller.WindowController;
+import ru.haazad.cloud.client.gui.service.AlertService;
 import ru.haazad.cloud.client.service.*;
-import ru.haazad.cloud.client.service.impl.ClientAlertService;
+import ru.haazad.cloud.client.gui.service.impl.ClientAlertService;
 import ru.haazad.cloud.client.service.impl.ClientCommandDictionaryService;
 import ru.haazad.cloud.client.service.impl.MD5EncryptPasswordService;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
@@ -22,17 +23,17 @@ public class Factory {
         ClientApp.setUsername(username);
     }
 
-    public static Initializable getActiveController() {
+    public static WindowController getActiveController() {
         return ClientApp.getActiveController();
     }
 
-    public static void setActiveController(Initializable controller) {
+    public static void setActiveController(WindowController controller) {
         ClientApp.setActiveController(controller);
     }
 
-    public static Initializable getSecondaryController() { return ClientApp.getSecondaryController();}
+    public static WindowController getSecondaryController() { return ClientApp.getSecondaryController();}
 
-    public static void setSecondaryController(Initializable controller) {ClientApp.setSecondaryController(controller);}
+    public static void setSecondaryController(WindowController controller) {ClientApp.setSecondaryController(controller);}
 
     public static NetworkService initializeNetworkService() {
         return NettyNetworkService.initializeNetwork();
@@ -62,9 +63,8 @@ public class Factory {
 
     public static List<CommandService> getCommandServices() {
         return Arrays.asList(new SuccessLogin(),
-                new BadLogin(),
-                new SuccessRegistration(),
-                new ErrorRegistration(),
+                new ErrorCommand(),
+                new InfoCommand(),
                 new SuccessViewFilesOnServer());
     }
 }

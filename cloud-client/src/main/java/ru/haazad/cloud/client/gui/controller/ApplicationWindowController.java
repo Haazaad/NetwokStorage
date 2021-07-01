@@ -1,27 +1,30 @@
-package ru.haazad.cloud.client.controller;
+package ru.haazad.cloud.client.gui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.NetworkService;
 
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class ApplicationWindowController implements Initializable {
+public class ApplicationWindowController implements Initializable, WindowController {
     private static final Logger logger = LogManager.getLogger(ApplicationWindowController.class);
+
+    private Stage stage;
 
     public TextField clientPathFolder, serverPathFolder;
     public ListView<String> clientDirectoryView, serverDirectoryView;
@@ -34,11 +37,7 @@ public class ApplicationWindowController implements Initializable {
         network = Factory.getNetworkService();
         clientPathFolder.appendText(Factory.getView().getDirectoryPath(null).toString());
         listClientDirectory(Factory.getView().getDirectoryPath(null));
-        network.sendCommand(new Command("ls", new Object[]{Factory.getUsername()}));
-    }
-
-    public void disconnect() {
-        network.closeConnection();
+        network.sendCommand(new Command(CommandName.LS, new Object[]{Factory.getUsername()}));
     }
 
     private void listClientDirectory(Path path) {
@@ -58,7 +57,7 @@ public class ApplicationWindowController implements Initializable {
 
     public void moveToServerDirectory(ActionEvent event) {
         String path = serverPathFolder.getText();
-        network.sendCommand(new Command("ls", new Object[]{path}));
+        network.sendCommand(new Command(CommandName.LS, new Object[]{path}));
     }
 
     private String getSelectedItem(ListView<String> view) {
@@ -69,7 +68,7 @@ public class ApplicationWindowController implements Initializable {
 
     public void moveToServerDirectoryByKeyPressed(KeyEvent keyEvent) {
         String path = serverPathFolder.getText() + "\\" + getSelectedItem(serverDirectoryView);
-        network.sendCommand(new Command("ls", new Object[]{path}));
+        network.sendCommand(new Command(CommandName.LS, new Object[]{path}));
     }
 
     public void upToClientDirectory(ActionEvent event) {
@@ -98,6 +97,47 @@ public class ApplicationWindowController implements Initializable {
         for (int i = 0; i < curPath.length - 1; i++) {
             sb.append(curPath[i]).append("\\");
         }
-        network.sendCommand(new Command("ls", new Object[]{sb.toString()}));
+        network.sendCommand(new Command(CommandName.LS, new Object[]{sb.toString()}));
+    }
+
+    @Override
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @Override
+    public Stage getStage() {
+        return stage;
+    }
+
+    @Override
+    public void close() {
+        stage.close();
+        network.closeConnection();
+    }
+
+    @Override
+    public void showErrorAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showErrorAlert(cause));
+    }
+
+    public void showInfoAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showInfoAlert(cause));
+    }
+
+    @Override
+    public void processAction(Object[] args) {
+        String path = (String) args[0];
+        List<String> listFiles = (List<String>) args[1];
+        Platform.runLater(() -> {
+                    serverPathFolder.clear();
+                    serverPathFolder.appendText(path);
+                    serverDirectoryView.getItems().clear();
+                    for (String s : listFiles) {
+                        serverDirectoryView.getItems().add(s);
+                    }
+                }
+        );
+
     }
 }

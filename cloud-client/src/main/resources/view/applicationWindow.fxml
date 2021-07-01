@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="585.0" prefWidth="1166.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.controller.ApplicationWindowController">
+<AnchorPane prefHeight="585.0" prefWidth="1166.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.haazad.cloud.client.gui.controller.ApplicationWindowController">
    <children>
       <TextField fx:id="clientPathFolder" layoutX="14.0" layoutY="22.0" onAction="#moveToClientDirectory" prefHeight="25.0" prefWidth="509.0" promptText="Client directory path" />
       <Button layoutX="523.0" layoutY="22.0" mnemonicParsing="false" onAction="#upToClientDirectory" prefHeight="25.0" prefWidth="56.0" text="Up" />

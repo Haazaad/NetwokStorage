@@ -1,9 +1,10 @@
 package ru.haazad.cloud.client.service;
 
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 
 public interface CommandService {
     void processCommand(Command command);
 
-    String getCommand();
+    CommandName getCommand();
 }

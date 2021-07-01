@@ -13,7 +13,7 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.client.config.ConfigProperty;
 import ru.haazad.cloud.client.service.NetworkService;
 import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
@@ -54,8 +54,8 @@ public class NettyNetworkService implements NetworkService {
                                         new CommandHandler());
                             }
                         });
-                ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
-                logger.info("Connecting to server " + ConfigProperty.getProperties("server.host") + " on port " + ConfigProperty.getProperties("server.port"));
+                ChannelFuture future = b.connect(ConfigProperty.getServerHost(), ConfigProperty.getServerPort()).sync();
+                logger.info("Connecting to server " + ConfigProperty.getServerHost() + " on port " + ConfigProperty.getServerPort());
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 logger.throwing(Level.ERROR, e);
@@ -71,11 +71,6 @@ public class NettyNetworkService implements NetworkService {
     public void sendCommand(Command command) {
         logger.debug("Command is " + command.toString());
         channel.writeAndFlush(command);
-    }
-
-    @Override
-    public String readCommandResult() {
-        return null;
     }
 
     @Override

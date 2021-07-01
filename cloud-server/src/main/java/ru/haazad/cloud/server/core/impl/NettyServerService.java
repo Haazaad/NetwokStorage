@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.service.impl;
+package ru.haazad.cloud.server.core.impl;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -14,25 +14,29 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.server.config.ConfigProperty;
-import ru.haazad.cloud.server.service.ServerService;
-import ru.haazad.cloud.server.service.impl.handler.ChannelDisconnectHandler;
-import ru.haazad.cloud.server.service.impl.handler.CommandHandler;
-import ru.haazad.cloud.server.service.impl.handler.ChannelActivateHandler;
+import ru.haazad.cloud.server.core.DatabaseService;
+import ru.haazad.cloud.server.core.ServerService;
+import ru.haazad.cloud.server.core.handler.ChannelDisconnectHandler;
+import ru.haazad.cloud.server.core.handler.CommandHandler;
+import ru.haazad.cloud.server.core.handler.ChannelActivateHandler;
+import ru.haazad.cloud.server.factory.Factory;
 
 public class NettyServerService implements ServerService {
     private static final Logger logger = LogManager.getLogger(NettyServerService.class);
-
-    private static NettyServerService serverService;
+    private static DatabaseService databaseService;
 
     private NettyServerService(){}
 
     public static NettyServerService initializeServerService() {
-        serverService = new NettyServerService();
-        return serverService;
+        return new NettyServerService();
     }
+
+    public static DatabaseService getDatabaseService() {return databaseService;}
 
     @Override
     public void startServer() {
+        databaseService = Factory.initializeDbService();
+        databaseService.connect();
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -50,12 +54,13 @@ public class NettyServerService implements ServerService {
                                     );
                         }
                     });
-            ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
-            logger.info("Server is running on port: " + ConfigProperty.getProperties("server.port"));
+            ChannelFuture future = b.bind(Integer.parseInt(ConfigProperty.getServerPort())).sync();
+            logger.info("Server is running on port: " + ConfigProperty.getServerPort());
             future.channel().closeFuture().sync();
         } catch (Exception e) {
             logger.throwing(Level.ERROR, e);
         } finally {
+            databaseService.disconnect();
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }

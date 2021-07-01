@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.service.impl.command;
+package ru.haazad.cloud.server.core.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,8 +6,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
-import ru.haazad.cloud.server.service.CommandService;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -21,7 +21,7 @@ public class FilesUploadHandler extends ChannelInboundHandlerAdapter {
     private static final Logger logger = LogManager.getLogger(FilesUploadHandler.class);
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object obj) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object obj) {
         Command command = (Command) obj;
         Path dst = Paths.get((String) command.getArgs()[0]);
         ByteBuf byteBuf = (ByteBuf) command.getArgs()[1];
@@ -35,6 +35,6 @@ public class FilesUploadHandler extends ChannelInboundHandlerAdapter {
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);
         }
-        ctx.writeAndFlush(new Command("upload_ok", new Object[]{}));
+        ctx.writeAndFlush(new Command(CommandName.UPLOAD, new Object[]{}));
     }
 }

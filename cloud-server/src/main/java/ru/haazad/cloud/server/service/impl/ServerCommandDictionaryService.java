@@ -1,6 +1,7 @@
 package ru.haazad.cloud.server.service.impl;
 
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.server.factory.Factory;
 import ru.haazad.cloud.server.service.CommandDictionaryService;
 import ru.haazad.cloud.server.service.CommandService;
@@ -11,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 public class ServerCommandDictionaryService implements CommandDictionaryService {
-    private final Map<String, CommandService> commandServiceMap;
+    private final Map<CommandName, CommandService> commandServiceMap;
 
     public ServerCommandDictionaryService() {
         this.commandServiceMap = Collections.unmodifiableMap(getCommandDictionary());
     }
 
-    private Map<String, CommandService> getCommandDictionary() {
+    private Map<CommandName, CommandService> getCommandDictionary() {
         List<CommandService> commandServices = Factory.getCommandServices();
 
-        Map<String, CommandService> commandServiceMap = new HashMap<>();
+        Map<CommandName, CommandService> commandServiceMap = new HashMap<>();
         for (CommandService cs: commandServices) {
             commandServiceMap.put(cs.getCommand(), cs);
         }

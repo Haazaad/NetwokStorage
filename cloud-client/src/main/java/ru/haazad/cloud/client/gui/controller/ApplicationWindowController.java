@@ -3,17 +3,15 @@ package ru.haazad.cloud.client.gui.controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.NetworkService;
+import ru.haazad.cloud.command.FileInfo;
 
 import java.net.URL;
 import java.nio.file.Path;
@@ -21,13 +19,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Log4j2
 public class ApplicationWindowController implements Initializable, WindowController {
-    private static final Logger logger = LogManager.getLogger(ApplicationWindowController.class);
 
     private Stage stage;
 
     public TextField clientPathFolder, serverPathFolder;
-    public ListView<String> clientDirectoryView, serverDirectoryView;
+    public TableView<FileInfo> clientDirectoryView, serverDirectoryView;
     public Button uploadButton, downloadButton;
 
     private NetworkService network;
@@ -35,6 +33,8 @@ public class ApplicationWindowController implements Initializable, WindowControl
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         network = Factory.getNetworkService();
+        Factory.makeTableView(clientDirectoryView);
+        Factory.makeTableView(serverDirectoryView);
         clientPathFolder.appendText(Factory.getView().getDirectoryPath(null).toString());
         listClientDirectory(Factory.getView().getDirectoryPath(null));
         network.sendCommand(new Command(CommandName.LS, new Object[]{Factory.getUsername()}));
@@ -44,31 +44,44 @@ public class ApplicationWindowController implements Initializable, WindowControl
         clientDirectoryView.getItems().clear();
         clientPathFolder.clear();
         clientPathFolder.appendText(path.toString());
-        List<String> filesInDirectory = Factory.getView().getFilesInDirectory(path);
-        for (String s : filesInDirectory) {
-            clientDirectoryView.getItems().add(s);
-        }
+        clientDirectoryView.getItems().addAll(Factory.getView().getFilesInDirectory(path));
+        clientDirectoryView.sort();
     }
 
     public void moveToClientDirectory(ActionEvent event) {
-        clientDirectoryView.getItems().clear();
-        listClientDirectory(Factory.getView().getDirectoryPath(clientPathFolder.getText()));
+        displayClientDirectory(clientPathFolder.getText());
     }
 
     public void moveToServerDirectory(ActionEvent event) {
-        String path = serverPathFolder.getText();
+        displayServerDirectory(serverPathFolder.getText());
+    }
+
+    public void moveToClientDirectoryByMouseEvent(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+            displayClientDirectory(clientPathFolder.getText() + "/" + getSelectedItem(clientDirectoryView));
+        }
+    }
+
+    private void displayClientDirectory(String path) {
+        clientDirectoryView.getItems().clear();
+        listClientDirectory(Factory.getView().getDirectoryPath(path));
+    }
+
+    public void moveToServerDirectoryByMouseEvent(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() == 2) {
+            displayServerDirectory(serverPathFolder.getText() + "/" + getSelectedItem(serverDirectoryView));
+        }
+    }
+
+    private void displayServerDirectory(String path) {
         network.sendCommand(new Command(CommandName.LS, new Object[]{path}));
     }
 
-    private String getSelectedItem(ListView<String> view) {
-        String selected = view.getSelectionModel().getSelectedItem();
-        logger.info(String.format("Selected item=%s", selected));
-        return selected == null ? "" : selected;
-    }
-
-    public void moveToServerDirectoryByKeyPressed(KeyEvent keyEvent) {
-        String path = serverPathFolder.getText() + "\\" + getSelectedItem(serverDirectoryView);
-        network.sendCommand(new Command(CommandName.LS, new Object[]{path}));
+    private String getSelectedItem(TableView<FileInfo> view) {
+        if (!view.isFocused()) {
+            return null;
+        }
+        return view.getSelectionModel().getSelectedItem().getFileName();
     }
 
     public void upToClientDirectory(ActionEvent event) {
@@ -80,24 +93,25 @@ public class ApplicationWindowController implements Initializable, WindowControl
         }
     }
 
-    public void moveToClientDirectoryByKeyPressed(KeyEvent keyEvent) {
-        Path path = Paths.get(clientPathFolder.getText() + "\\" + getSelectedItem(clientDirectoryView));
-        listClientDirectory(path);
-    }
-
     public void uploadFileOnServer(ActionEvent event) {
-        String srcPath = clientPathFolder.getText() + "\\" + getSelectedItem(clientDirectoryView);
-        String dstPath = serverPathFolder.getText();
-        Factory.getFileTransferService().sendFile(srcPath, dstPath);
+//        String srcPath = clientPathFolder.getText() + "\\" + getSelectedItem(clientDirectoryView);
+//        String dstPath = serverPathFolder.getText();
+//        Factory.getFileTransferService().sendFile(srcPath, dstPath);
     }
 
     public void upToServerDirectory(ActionEvent event) {
-        String[] curPath = serverPathFolder.getText().replace("\\", " ").split(" ");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < curPath.length - 1; i++) {
-            sb.append(curPath[i]).append("\\");
+        String path = serverPathFolder.getText();
+        String[] arr;
+        if (path.contains("/")) {
+            arr = serverPathFolder.getText().replace("/", " ").split(" ");
+        } else {
+            arr = serverPathFolder.getText().replace("\\", " ").split(" ");
         }
-        network.sendCommand(new Command(CommandName.LS, new Object[]{sb.toString()}));
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length - 1; i++) {
+            sb.append(arr[i]).append("\\");
+        }
+        displayServerDirectory(sb.toString());
     }
 
     @Override
@@ -121,6 +135,7 @@ public class ApplicationWindowController implements Initializable, WindowControl
         Platform.runLater(() -> Factory.getAlertService().showErrorAlert(cause));
     }
 
+    @Override
     public void showInfoAlert(String cause) {
         Platform.runLater(() -> Factory.getAlertService().showInfoAlert(cause));
     }
@@ -128,16 +143,16 @@ public class ApplicationWindowController implements Initializable, WindowControl
     @Override
     public void processAction(Object[] args) {
         String path = (String) args[0];
-        List<String> listFiles = (List<String>) args[1];
+        List<FileInfo> listFiles = (List<FileInfo>) args[1];
         Platform.runLater(() -> {
                     serverPathFolder.clear();
                     serverPathFolder.appendText(path);
                     serverDirectoryView.getItems().clear();
-                    for (String s : listFiles) {
-                        serverDirectoryView.getItems().add(s);
-                    }
+                    serverDirectoryView.getItems().addAll(listFiles);
+                    serverDirectoryView.sort();
                 }
         );
-
     }
+
+
 }

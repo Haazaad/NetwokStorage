@@ -1,14 +1,17 @@
 package ru.haazad.cloud.client.factory;
 
+import javafx.scene.control.TableView;
 import ru.haazad.cloud.client.ClientApp;
 import ru.haazad.cloud.client.gui.controller.WindowController;
 import ru.haazad.cloud.client.gui.service.AlertService;
+import ru.haazad.cloud.client.gui.service.impl.CreateTableView;
 import ru.haazad.cloud.client.service.*;
 import ru.haazad.cloud.client.gui.service.impl.ClientAlertService;
 import ru.haazad.cloud.client.service.impl.ClientCommandDictionaryService;
 import ru.haazad.cloud.client.service.impl.MD5EncryptPasswordService;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
 import ru.haazad.cloud.client.service.impl.command.*;
+import ru.haazad.cloud.command.FileInfo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,14 +54,16 @@ public class Factory {
         return ClientAlertService.getAlertService();
     }
 
-    public static FileTransferService getFileTransferService() {return FileTransferService.getFiletransferService();}
-
     public static CommandDictionaryService getCommandDictionary() {
         return new ClientCommandDictionaryService();
     }
 
     public static ViewFilesInClientDirectory getView() {
         return new ViewFilesInClientDirectory().getView();
+    }
+
+    public static void makeTableView(TableView<FileInfo> tableView) {
+        CreateTableView.makeTableView(tableView);
     }
 
     public static List<CommandService> getCommandServices() {

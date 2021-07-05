@@ -14,7 +14,7 @@ public class SuccessViewFilesOnServer implements CommandService {
             Factory.getActiveController().processAction(command.getArgs());
             return;
         }
-        log.error("Not enough parameters for register");
+        log.error("Not enough parameters");
     }
 
     @Override

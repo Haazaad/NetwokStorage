@@ -78,9 +78,6 @@ public class ApplicationWindowController implements Initializable, WindowControl
     }
 
     private String getSelectedItem(TableView<FileInfo> view) {
-        if (!view.isFocused()) {
-            return null;
-        }
         return view.getSelectionModel().getSelectedItem().getFileName();
     }
 
@@ -91,12 +88,6 @@ public class ApplicationWindowController implements Initializable, WindowControl
         } else {
             Factory.getAlertService().showInfoAlert(String.format("Directory %s is root directory", path));
         }
-    }
-
-    public void uploadFileOnServer(ActionEvent event) {
-//        String srcPath = clientPathFolder.getText() + "\\" + getSelectedItem(clientDirectoryView);
-//        String dstPath = serverPathFolder.getText();
-//        Factory.getFileTransferService().sendFile(srcPath, dstPath);
     }
 
     public void upToServerDirectory(ActionEvent event) {
@@ -112,6 +103,13 @@ public class ApplicationWindowController implements Initializable, WindowControl
             sb.append(arr[i]).append("\\");
         }
         displayServerDirectory(sb.toString());
+    }
+
+    public void uploadFileOnServer(ActionEvent event) {
+        String srcPath = clientPathFolder.getText() + "\\" + getSelectedItem(clientDirectoryView);
+        String dstPath = serverPathFolder.getText();
+        Object[] cmdArgs = {new FileInfo(Paths.get(srcPath)), dstPath};
+        network.sendCommand(new Command(CommandName.PREPARE_UPLOAD, cmdArgs));
     }
 
     @Override

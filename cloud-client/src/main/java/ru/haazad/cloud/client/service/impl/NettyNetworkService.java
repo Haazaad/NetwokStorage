@@ -82,7 +82,11 @@ public class NettyNetworkService implements NetworkService {
     public void sendFile(String path) {
         try {
             ChannelFuture future = channel.writeAndFlush(new ChunkedFile(new File(path)));
-            future.addListener((ChannelFutureListener) listener -> logger.info("Transfer success"));
+            logger.debug(String.format("Start send file %s", path));
+            future.addListener((ChannelFutureListener) listener -> {
+                logger.debug("Transfer success");
+                SwitchPipelineService.switchAfterTransferFile(channel.pipeline().firstContext());
+            });
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);
         }

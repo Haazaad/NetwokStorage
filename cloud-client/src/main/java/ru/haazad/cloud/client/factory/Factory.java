@@ -70,6 +70,7 @@ public class Factory {
         return Arrays.asList(new SuccessLogin(),
                 new ErrorCommand(),
                 new InfoCommand(),
-                new SuccessViewFilesOnServer());
+                new SuccessViewFilesOnServer(),
+                new SuccessUploadCommand());
     }
 }

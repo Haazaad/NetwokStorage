@@ -25,10 +25,13 @@ public class NettyServerService implements ServerService {
     private static final Logger logger = LogManager.getLogger(NettyServerService.class);
     private static DatabaseService databaseService;
 
+    private static NettyServerService networkService;
+
     private NettyServerService(){}
 
     public static NettyServerService initializeServerService() {
-        return new NettyServerService();
+        networkService = new NettyServerService();
+        return networkService;
     }
 
     public static DatabaseService getDatabaseService() {return databaseService;}

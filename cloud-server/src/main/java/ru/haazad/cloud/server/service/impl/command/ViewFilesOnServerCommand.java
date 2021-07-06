@@ -1,10 +1,10 @@
 package ru.haazad.cloud.server.service.impl.command;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.command.CommandName;
+import ru.haazad.cloud.command.FileInfo;
 import ru.haazad.cloud.server.config.ConfigProperty;
 import ru.haazad.cloud.server.service.CommandService;
 
@@ -16,21 +16,21 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j2
 public class ViewFilesOnServerCommand implements CommandService {
-    private static final Logger logger = LogManager.getLogger(ViewFilesOnServerCommand.class);
 
     @Override
     public Command processCommand(Command command) {
         String srcDirectory = (String) command.getArgs()[0];
-        List<String> listFiles = getFilesInDirectory(getUserDirectory(srcDirectory));
+        List<FileInfo> listFiles = getFilesInDirectory(getUserDirectory(srcDirectory));
         return new Command(CommandName.LS, new Object[]{srcDirectory, listFiles});
     }
 
-    private List<String> getFilesInDirectory(Path path) {
-        List<String> list = new ArrayList<>();
+    private List<FileInfo> getFilesInDirectory(Path path) {
+        List<FileInfo> list = new ArrayList<>();
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
             for (Path p : stream) {
-                list.add(p.getFileName().toString());
+                list.add(new FileInfo(p));
             }
 
         } catch (IOException e) {
@@ -46,7 +46,7 @@ public class ViewFilesOnServerCommand implements CommandService {
             try {
                 Files.createDirectory(path);
             } catch (IOException e) {
-                logger.throwing(Level.ERROR, e);
+                log.throwing(Level.ERROR, e);
             }
         }
         return path;

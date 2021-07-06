@@ -1,12 +1,12 @@
 package ru.haazad.cloud.client.service;
 
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
 
 public interface NetworkService {
 
     void sendCommand(Command command);
 
-    String readCommandResult();
+    void sendFile(String path);
 
     void closeConnection();
 

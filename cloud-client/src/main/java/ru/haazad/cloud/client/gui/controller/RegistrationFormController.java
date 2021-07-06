@@ -1,5 +1,6 @@
-package ru.haazad.cloud.client.controller;
+package ru.haazad.cloud.client.gui.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
@@ -7,14 +8,15 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
+import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.NetworkService;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class RegistrationFormController implements Initializable {
+public class RegistrationFormController implements Initializable,WindowController{
     private static final Logger logger = LogManager.getLogger(RegistrationFormController.class);
 
     private NetworkService network;
@@ -26,6 +28,24 @@ public class RegistrationFormController implements Initializable {
 
     public Stage getStage() {
         return stage;
+    }
+
+    @Override
+    public void close() {
+        Platform.runLater(() -> stage.close());
+    }
+
+    @Override
+    public void showErrorAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showErrorAlert(cause));
+    }
+
+    public void showInfoAlert(String cause) {
+        Platform.runLater(() -> Factory.getAlertService().showInfoAlert(cause));
+    }
+
+    @Override
+    public void processAction(Object[] args) {
     }
 
     public void setStage(Stage stage) {
@@ -52,7 +72,7 @@ public class RegistrationFormController implements Initializable {
         if (!network.isConnected()) {
             network = Factory.initializeNetworkService();
         }
-        network.sendCommand(new Command("register", new Object[]{
+        network.sendCommand(new Command(CommandName.REGISTER, new Object[]{
                 loginField.getText(),
                 Factory.getEncryptService().encryptPassword(passwordField.getText()),
                 emailField.getText()
@@ -60,6 +80,6 @@ public class RegistrationFormController implements Initializable {
     }
 
     public void closeForm(ActionEvent event) {
-        stage.close();
+        close();
     }
 }

@@ -1,4 +1,4 @@
-package ru.haazad.cloud.client.service;
+package ru.haazad.cloud.client.gui.service;
 
 public interface AlertService {
     void showErrorAlert(Object cause);

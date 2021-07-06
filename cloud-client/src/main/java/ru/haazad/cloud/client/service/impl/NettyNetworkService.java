@@ -2,6 +2,7 @@ package ru.haazad.cloud.client.service.impl;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -10,13 +11,17 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.stream.ChunkedFile;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.Command;
+import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.client.config.ConfigProperty;
 import ru.haazad.cloud.client.service.NetworkService;
 import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
+
+import java.io.File;
+import java.io.IOException;
 
 
 public class NettyNetworkService implements NetworkService {
@@ -54,8 +59,8 @@ public class NettyNetworkService implements NetworkService {
                                         new CommandHandler());
                             }
                         });
-                ChannelFuture future = b.connect(ConfigProperty.getProperties("server.host"), Integer.parseInt(ConfigProperty.getProperties("server.port"))).sync();
-                logger.info("Connecting to server " + ConfigProperty.getProperties("server.host") + " on port " + ConfigProperty.getProperties("server.port"));
+                ChannelFuture future = b.connect(ConfigProperty.getServerHost(), ConfigProperty.getServerPort()).sync();
+                logger.info("Connecting to server " + ConfigProperty.getServerHost() + " on port " + ConfigProperty.getServerPort());
                 future.channel().closeFuture().sync();
             } catch (Exception e) {
                 logger.throwing(Level.ERROR, e);
@@ -74,8 +79,17 @@ public class NettyNetworkService implements NetworkService {
     }
 
     @Override
-    public String readCommandResult() {
-        return null;
+    public void sendFile(String path) {
+        try {
+            ChannelFuture future = channel.writeAndFlush(new ChunkedFile(new File(path)));
+            logger.debug(String.format("Start send file %s", path));
+            future.addListener((ChannelFutureListener) listener -> {
+                logger.debug("Transfer success");
+                SwitchPipelineService.switchAfterTransferFile(channel.pipeline().firstContext());
+            });
+        } catch (IOException e) {
+            logger.throwing(Level.ERROR, e);
+        }
     }
 
     @Override

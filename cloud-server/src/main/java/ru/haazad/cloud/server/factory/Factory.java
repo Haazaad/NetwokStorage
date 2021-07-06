@@ -7,6 +7,7 @@ import ru.haazad.cloud.server.service.CommandService;
 import ru.haazad.cloud.server.service.impl.ServerCommandDictionaryService;
 import ru.haazad.cloud.server.core.impl.PostgreDatabaseService;
 import ru.haazad.cloud.server.core.impl.NettyServerService;
+import ru.haazad.cloud.server.service.impl.command.DownloadCommand;
 import ru.haazad.cloud.server.service.impl.command.LoginCommand;
 import ru.haazad.cloud.server.service.impl.command.RegisterCommand;
 import ru.haazad.cloud.server.service.impl.command.ViewFilesOnServerCommand;
@@ -35,6 +36,7 @@ public class Factory {
     public static List<CommandService> getCommandServices() {
         return Arrays.asList(new LoginCommand(),
                 new RegisterCommand(),
-                new ViewFilesOnServerCommand());
+                new ViewFilesOnServerCommand(),
+                new DownloadCommand());
     }
 }

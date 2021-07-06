@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.command.FileInfo;
+import ru.haazad.cloud.server.config.ConfigProperty;
 import ru.haazad.cloud.server.core.impl.SwitchPipelineService;
 import ru.haazad.cloud.server.factory.Factory;
 import ru.haazad.cloud.server.service.CommandDictionaryService;
@@ -36,11 +37,11 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
             ctx.writeAndFlush(new Command(CommandName.READY, command.getArgs()));
             SwitchPipelineService.switchToFileUpload(ctx);
         } else if (command.getCommandName() == CommandName.DOWNLOAD) {
-            Path path = Paths.get((String) command.getArgs()[0]);
+            Path path = Paths.get((ConfigProperty.getStorage() + "\\" + command.getArgs()[0]));
             FileInfo info = new FileInfo(path);
-            ctx.writeAndFlush(new Command(CommandName.PREPARE_DOWNLOAD, new Object[]{info, path.toString()}));
+            ctx.writeAndFlush(new Command(CommandName.PREPARE_DOWNLOAD, new Object[]{info, path.toString(), command.getArgs()[1]}));
         } else if (command.getCommandName() == CommandName.READY){
-            String path = (String) command.getArgs()[0];
+            String path = (String) command.getArgs()[1];
             SwitchPipelineService.switchToFileUpload(ctx);
             ChannelFuture future = ctx.channel().writeAndFlush(new ChunkedFile(new File(path)));
             future.addListener((ChannelFutureListener) listener -> {

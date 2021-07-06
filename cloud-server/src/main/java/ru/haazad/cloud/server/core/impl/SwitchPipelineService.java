@@ -22,15 +22,12 @@ public class SwitchPipelineService {
         log.debug("Switch pipeline to upload");
     }
 
-    public static void switchAfterUpload(ChannelHandlerContext context, String dstDirectory) {
+    public static void switchAfterUpload(ChannelHandlerContext context) {
         context.pipeline().remove(ChunkedWriteHandler.class);
         context.pipeline().remove(FileHandler.class);
         context.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                 new ObjectEncoder(),
                 new CommandHandler());
-        Command cmd = new Command(CommandName.UPLOAD_SUCCESS, new Object[]{"Upload is finished", dstDirectory});
-        context.writeAndFlush(cmd);
-        log.debug("Sending command" + cmd);
         log.debug("Switch pipeline to command");
     }
 

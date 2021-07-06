@@ -1,12 +1,11 @@
-package ru.haazad.cloud.server.core.handler;
+package ru.haazad.cloud.client.service.impl.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
-import ru.haazad.cloud.server.config.ConfigProperty;
-import ru.haazad.cloud.server.core.impl.SwitchPipelineService;
+import ru.haazad.cloud.client.service.impl.SwitchPipelineService;
 
 import java.io.*;
 
@@ -32,7 +31,7 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object obj) {
         log.debug("Prepare upload file");
         ByteBuf byteBuf = (ByteBuf) obj;
-        String dst = ConfigProperty.getStorage() + "/" + dstDirectory + "/" + filename;
+        String dst = dstDirectory + "/" + filename;
         File file = new File(dst);
         if (file.exists()) {
             file.delete();
@@ -49,7 +48,7 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
         }
         byteBuf.release();
         if (file.length() == fileSize) {
-            SwitchPipelineService.switchAfterUpload(ctx);
+            SwitchPipelineService.switchAfterTransferFile(ctx);
             log.debug("Upload is finished");
         }
 

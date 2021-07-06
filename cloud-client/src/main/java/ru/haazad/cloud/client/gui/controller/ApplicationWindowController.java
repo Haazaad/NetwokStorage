@@ -112,6 +112,12 @@ public class ApplicationWindowController implements Initializable, WindowControl
         network.sendCommand(new Command(CommandName.PREPARE_UPLOAD, cmdArgs));
     }
 
+    public void downloadFile(ActionEvent event) {
+        String srcPath = serverPathFolder.getText() + "\\" + getSelectedItem(serverDirectoryView);
+        String dstPath = clientPathFolder.getText();
+        network.sendCommand(new Command(CommandName.DOWNLOAD, new Object[]{srcPath, dstPath}));
+    }
+
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -151,6 +157,4 @@ public class ApplicationWindowController implements Initializable, WindowControl
                 }
         );
     }
-
-
 }

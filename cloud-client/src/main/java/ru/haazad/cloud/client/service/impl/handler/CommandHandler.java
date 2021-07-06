@@ -25,6 +25,15 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
                 Factory.getNetworkService().sendFile(path.getPath());
             }
             return;
+        } else if (command.getCommandName() == CommandName.PREPARE_DOWNLOAD) {
+            if (command.haveImportantArgs(2)) {
+                FileInfo info = (FileInfo) command.getArgs()[0];
+                FileHandler.setFilename(info.getFileName());
+                FileHandler.setFileSize(info.getSize());
+                FileHandler.setDstDirectory((String) command.getArgs()[1]);
+                ctx.writeAndFlush(new Command(CommandName.READY, command.getArgs()));
+                SwitchPipelineService.switchToTransferFile(ctx);
+            }
         }
         CommandDictionaryService commandDictionary = Factory.getCommandDictionary();
         commandDictionary.processCommand(command);

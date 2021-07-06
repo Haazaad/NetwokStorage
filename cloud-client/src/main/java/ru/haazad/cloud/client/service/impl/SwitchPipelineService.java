@@ -26,15 +26,4 @@ public class SwitchPipelineService {
         context.pipeline().remove(ChunkedWriteHandler.class);
         log.debug("Switch pipeline to command");
     }
-
-    public static void switchToFileDownload(ChannelHandlerContext context) {
-        context.pipeline().addLast(new ChunkedWriteHandler());
-        context.pipeline().remove(ObjectDecoder.class);
-        context.pipeline().remove(CommandHandler.class);
-    }
-
-    public static void switchAfterDownload(ChannelHandlerContext context) {
-        context.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)), new CommandHandler());
-        context.pipeline().remove(ChunkedWriteHandler.class);
-    }
 }

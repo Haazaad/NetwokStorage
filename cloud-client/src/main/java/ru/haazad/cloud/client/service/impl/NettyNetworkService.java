@@ -15,6 +15,7 @@ import io.netty.handler.stream.ChunkedFile;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.haazad.cloud.client.service.impl.util.SwitchPipelineUtil;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.client.config.ConfigProperty;
 import ru.haazad.cloud.client.service.NetworkService;
@@ -85,7 +86,7 @@ public class NettyNetworkService implements NetworkService {
             logger.debug(String.format("Start send file %s", path));
             future.addListener((ChannelFutureListener) listener -> {
                 logger.debug("Transfer success");
-                SwitchPipelineService.switchAfterTransferFile(channel.pipeline().firstContext());
+                SwitchPipelineUtil.switchAfterTransferFile(channel.pipeline().firstContext());
             });
         } catch (IOException e) {
             logger.throwing(Level.ERROR, e);

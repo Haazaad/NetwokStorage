@@ -4,9 +4,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.stream.ChunkedFile;
-import io.netty.handler.stream.ChunkedWriteHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,7 +12,7 @@ import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.command.FileInfo;
 import ru.haazad.cloud.server.config.ConfigProperty;
-import ru.haazad.cloud.server.core.impl.SwitchPipelineService;
+import ru.haazad.cloud.server.core.util.SwitchPipelineUtil;
 import ru.haazad.cloud.server.factory.Factory;
 import ru.haazad.cloud.server.service.CommandDictionaryService;
 
@@ -35,18 +33,18 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
             FileHandler.setDstDirectory((String) command.getArgs()[1]);
             FileHandler.setFileSize(info.getSize());
             ctx.writeAndFlush(new Command(CommandName.READY, command.getArgs()));
-            SwitchPipelineService.switchToFileUpload(ctx);
+            SwitchPipelineUtil.switchToFileUpload(ctx);
         } else if (command.getCommandName() == CommandName.DOWNLOAD) {
             Path path = Paths.get((ConfigProperty.getStorage() + "\\" + command.getArgs()[0]));
             FileInfo info = new FileInfo(path);
             ctx.writeAndFlush(new Command(CommandName.PREPARE_DOWNLOAD, new Object[]{info, path.toString(), command.getArgs()[1]}));
         } else if (command.getCommandName() == CommandName.READY){
             String path = (String) command.getArgs()[1];
-            SwitchPipelineService.switchToFileUpload(ctx);
+            SwitchPipelineUtil.switchToFileUpload(ctx);
             ChannelFuture future = ctx.channel().writeAndFlush(new ChunkedFile(new File(path)));
             future.addListener((ChannelFutureListener) listener -> {
                 logger.debug("File transfer success");
-                SwitchPipelineService.switchAfterUpload(ctx);
+                SwitchPipelineUtil.switchAfterUpload(ctx);
             });
         } else {
             CommandDictionaryService commandDictionary = Factory.getCommandDictionary();

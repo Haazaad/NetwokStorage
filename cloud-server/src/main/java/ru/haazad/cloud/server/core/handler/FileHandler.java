@@ -6,7 +6,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import ru.haazad.cloud.server.config.ConfigProperty;
-import ru.haazad.cloud.server.core.impl.SwitchPipelineService;
+import ru.haazad.cloud.server.core.util.SwitchPipelineUtil;
 
 import java.io.*;
 
@@ -31,7 +31,6 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object obj) {
         log.debug("Prepare upload file");
-        ByteBuf byteBuf = (ByteBuf) obj;
         String dst = ConfigProperty.getStorage() + "/" + dstDirectory + "/" + filename;
         File file = new File(dst);
         if (file.exists()) {
@@ -39,17 +38,19 @@ public class FileHandler extends ChannelInboundHandlerAdapter {
         }
         try {
             file.createNewFile();
+            ByteBuf byteBuf = (ByteBuf) obj;
             try (OutputStream out = new BufferedOutputStream(new FileOutputStream(dst, true))){
                 while (byteBuf.isReadable()) {
                     out.write(byteBuf.readByte());
                 }
+            } finally {
+                byteBuf.release();
             }
         } catch (IOException e) {
             log.throwing(Level.ERROR, e);
         }
-        byteBuf.release();
         if (file.length() == fileSize) {
-            SwitchPipelineService.switchAfterUpload(ctx);
+            SwitchPipelineUtil.switchAfterUpload(ctx);
             log.debug("Upload is finished");
         }
 

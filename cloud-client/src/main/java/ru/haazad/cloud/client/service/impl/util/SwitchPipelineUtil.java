@@ -1,4 +1,4 @@
-package ru.haazad.cloud.client.service.impl;
+package ru.haazad.cloud.client.service.impl.util;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.serialization.ClassResolvers;
@@ -10,7 +10,7 @@ import ru.haazad.cloud.client.service.impl.handler.CommandHandler;
 import ru.haazad.cloud.client.service.impl.handler.FileHandler;
 
 @Log4j2
-public class SwitchPipelineService {
+public class SwitchPipelineUtil {
 
     public static void switchToTransferFile(ChannelHandlerContext context) {
         context.pipeline().addLast(new ChunkedWriteHandler(), new FileHandler());

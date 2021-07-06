@@ -3,10 +3,10 @@ package ru.haazad.cloud.client.factory;
 import javafx.scene.control.TableView;
 import ru.haazad.cloud.client.ClientApp;
 import ru.haazad.cloud.client.gui.controller.WindowController;
-import ru.haazad.cloud.client.gui.service.AlertService;
-import ru.haazad.cloud.client.gui.service.impl.CreateTableView;
+import ru.haazad.cloud.client.gui.util.AlertUtil;
+import ru.haazad.cloud.client.gui.util.impl.CreateTableView;
 import ru.haazad.cloud.client.service.*;
-import ru.haazad.cloud.client.gui.service.impl.ClientAlertService;
+import ru.haazad.cloud.client.gui.util.impl.ClientAlertUtil;
 import ru.haazad.cloud.client.service.impl.ClientCommandDictionaryService;
 import ru.haazad.cloud.client.service.impl.MD5EncryptPasswordService;
 import ru.haazad.cloud.client.service.impl.NettyNetworkService;
@@ -50,8 +50,8 @@ public class Factory {
         return MD5EncryptPasswordService.getEncryptService();
     }
 
-    public static AlertService getAlertService() {
-        return ClientAlertService.getAlertService();
+    public static AlertUtil getAlertService() {
+        return ClientAlertUtil.getAlertService();
     }
 
     public static CommandDictionaryService getCommandDictionary() {

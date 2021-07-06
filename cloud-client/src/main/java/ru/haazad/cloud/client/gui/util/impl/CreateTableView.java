@@ -1,4 +1,4 @@
-package ru.haazad.cloud.client.gui.service.impl;
+package ru.haazad.cloud.client.gui.util.impl;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

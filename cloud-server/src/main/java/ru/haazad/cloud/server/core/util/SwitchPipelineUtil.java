@@ -1,4 +1,4 @@
-package ru.haazad.cloud.server.core.impl;
+package ru.haazad.cloud.server.core.util;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.serialization.ClassResolvers;
@@ -6,13 +6,11 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import lombok.extern.log4j.Log4j2;
-import ru.haazad.cloud.command.Command;
-import ru.haazad.cloud.command.CommandName;
 import ru.haazad.cloud.server.core.handler.CommandHandler;
 import ru.haazad.cloud.server.core.handler.FileHandler;
 
 @Log4j2
-public class SwitchPipelineService {
+public class SwitchPipelineUtil {
 
     public static void switchToFileUpload(ChannelHandlerContext context) {
         context.pipeline().addLast(new ChunkedWriteHandler(), new FileHandler());
@@ -29,15 +27,5 @@ public class SwitchPipelineService {
                 new ObjectEncoder(),
                 new CommandHandler());
         log.debug("Switch pipeline to command");
-    }
-
-    public static void switchToFileDownload(ChannelHandlerContext context) {
-        context.pipeline().addLast(new ChunkedWriteHandler());
-        context.pipeline().remove(ObjectEncoder.class);
-    }
-
-    public static void switchAfterDownload(ChannelHandlerContext context) {
-        context.pipeline().addLast(new ObjectEncoder());
-        context.pipeline().remove(ChunkedWriteHandler.class);
     }
 }

@@ -1,18 +1,18 @@
-package ru.haazad.cloud.client.gui.service.impl;
+package ru.haazad.cloud.client.gui.util.impl;
 
 import javafx.scene.control.Alert;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.client.gui.service.AlertService;
+import ru.haazad.cloud.client.gui.util.AlertUtil;
 
-public class ClientAlertService implements AlertService {
-    private static final Logger logger = LogManager.getLogger(ClientAlertService.class);
+public class ClientAlertUtil implements AlertUtil {
+    private static final Logger logger = LogManager.getLogger(ClientAlertUtil.class);
 
-    private ClientAlertService() {
+    private ClientAlertUtil() {
     }
 
-    public static ClientAlertService getAlertService() {
-        return new ClientAlertService();
+    public static ClientAlertUtil getAlertService() {
+        return new ClientAlertUtil();
     }
 
     @Override

@@ -1,6 +1,6 @@
-package ru.haazad.cloud.client.gui.service;
+package ru.haazad.cloud.client.gui.util;
 
-public interface AlertService {
+public interface AlertUtil {
     void showErrorAlert(Object cause);
 
     void showInfoAlert(Object cause);

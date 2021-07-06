@@ -5,7 +5,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.haazad.cloud.client.service.impl.SwitchPipelineService;
+import ru.haazad.cloud.client.service.impl.util.SwitchPipelineUtil;
 import ru.haazad.cloud.command.Command;
 import ru.haazad.cloud.client.factory.Factory;
 import ru.haazad.cloud.client.service.CommandDictionaryService;
@@ -20,7 +20,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
         logger.debug("Input command " + command.toString());
         if (command.getCommandName() == CommandName.READY) {
             if (command.haveImportantArgs(2)) {
-                SwitchPipelineService.switchToTransferFile(ctx);
+                SwitchPipelineUtil.switchToTransferFile(ctx);
                 FileInfo path = (FileInfo) command.getArgs()[0];
                 Factory.getNetworkService().sendFile(path.getPath());
             }
@@ -32,7 +32,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<Command> {
                 FileHandler.setFileSize(info.getSize());
                 FileHandler.setDstDirectory((String) command.getArgs()[2]);
                 ctx.writeAndFlush(new Command(CommandName.READY, command.getArgs()));
-                SwitchPipelineService.switchToTransferFile(ctx);
+                SwitchPipelineUtil.switchToTransferFile(ctx);
             }
             return;
         }
